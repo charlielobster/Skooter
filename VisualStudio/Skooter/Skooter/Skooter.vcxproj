@@ -107,12 +107,11 @@
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="Skooter.ino">
-      <FileType>CppCode</FileType>
-    </None>
+    <ClInclude Include="Skooter.h" />
+    <ClInclude Include="__vm\.Skooter.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.Skooter.vsarduino.h" />
+    <None Include="Skooter.ino" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

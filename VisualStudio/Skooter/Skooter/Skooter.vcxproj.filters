@@ -15,11 +15,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Skooter.ino" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="Skooter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="__vm\.Skooter.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Skooter.ino" />
   </ItemGroup>
 </Project>
