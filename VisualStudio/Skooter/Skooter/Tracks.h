@@ -6,8 +6,8 @@
 class Tracks 
 {
 public: 
-	const int MOVE_SPEED = 5;
-	const int TURN_SPEED = 5;
+	const int MOVE_SPEED = 15;
+	const int TURN_SPEED = 15;
 
 	void attach(int f, int t);
 
