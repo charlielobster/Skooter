@@ -1,12 +1,11 @@
-#include "Skooter.h"
+#include "Tracks.h"
 
-Skooter skooter;
-
+Tracks tracks;
 
 void setup() {
-	skooter.attach(9, 11);
+	tracks.attach(9, 11);
 }
 
 void loop() {
-	skooter.turning();
+	tracks.turning();
 }

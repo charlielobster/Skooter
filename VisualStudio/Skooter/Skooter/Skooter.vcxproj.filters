@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Skooter.h">
+    <ClInclude Include="__vm\.Skooter.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="__vm\.Skooter.vsarduino.h">
+    <ClInclude Include="Tracks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

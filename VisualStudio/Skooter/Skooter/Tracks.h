@@ -1,9 +1,9 @@
-#ifndef _SKOOTER_
-#define _SKOOTER_
+#ifndef _TRACKS_
+#define _TRACKS_
 
 #include <Servo.h>
 
-class Skooter 
+class Tracks 
 {
 public: 
 	Servo forward;
