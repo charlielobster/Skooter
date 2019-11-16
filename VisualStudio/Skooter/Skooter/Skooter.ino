@@ -7,5 +7,5 @@ void setup() {
 }
 
 void loop() {
-	tracks.turning();
+	tracks.goForward();
 }

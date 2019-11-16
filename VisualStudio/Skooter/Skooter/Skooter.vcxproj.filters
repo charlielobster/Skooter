@@ -24,5 +24,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Skooter.ino" />
+    <None Include="Tracks.ino">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
