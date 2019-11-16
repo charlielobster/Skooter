@@ -3,3 +3,9 @@
 ################################################################################
 
 /.vs/Skooter/v15/.suo
+/VisualStudio/Skooter/Skooter/Debug
+/VisualStudio/Skooter/Skooter/__vm
+*.db
+*.opendb
+*.suo
+/VisualStudio/Skooter/.vs/Skooter/v15/ipch/AutoPCH
