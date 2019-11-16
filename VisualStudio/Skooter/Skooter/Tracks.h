@@ -6,12 +6,21 @@
 class Tracks 
 {
 public: 
+	const int MOVE_SPEED = 5;
+	const int TURN_SPEED = 5;
+
+	void attach(int f, int t);
+
+	void turnRight();
+	void turnLeft();
+
+	void goForward();
+	void goBackward();
+	void stop();
+
+private:
 	Servo forward;
 	Servo turn;
-	int pos = 0;   
-	void attach(int f, int t);
-	void turning();
-	void goForward();
-
+	int pos = 0;
 };
 #endif

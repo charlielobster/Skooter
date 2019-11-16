@@ -4,30 +4,64 @@ void Tracks::attach(int f, int t)
 {
 	forward.attach(f);
 	turn.attach(t);
+	stop();
 }
 
-void Tracks::turning() {
-
-	for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
-	  // in steps of 1 degree
-		turn.write(pos);              // tell servo to go to position in variable 'pos'
-		delay(15);                       // waits 15ms for the servo to reach the position
-	}
-	for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-		turn.write(pos);              // tell servo to go to position in variable 'pos'
-		delay(15);                       // waits 15ms for the servo to reach the position
-	}
-
+void Tracks::turnRight() 
+{
+	turn.write(90 - TURN_SPEED);
+	//delay(10);
+	//for (pos = 0; pos <= 90; pos += 1) {	// Skooter slows down from max speed to null (90)
+	//	turn.write(pos);
+	//	delay(10);							// slows down behavior FIXME make this into a variable we can control
+	//}
+	//for (pos = 90; pos >= 0; pos -= 1) {	// Skooter speeds up from null (90)
+	//	turn.write(pos);
+	//	delay(10);							// FIXME use variable described above
+	//}
 }
 
-void Tracks::goForward() {
-	for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
-	  // in steps of 1 degree
-		forward.write(pos);              // tell servo to go to position in variable 'pos'
-		delay(15);                       // waits 15ms for the servo to reach the position
-	}
-	for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-		forward.write(pos);              // tell servo to go to position in variable 'pos'
-		delay(15);                       // waits 15ms for the servo to reach the position
-	}
+void Tracks::turnLeft()
+{
+	turn.write(90 + TURN_SPEED);
+	//for (pos = 90; pos <= 180; pos += 1) {	// Skooter speeds up from null (90) to max
+	//	turn.write(pos);
+	//	delay(10);							// slows down behavior FIXME make this into a variable we can control
+	//}
+	//for (pos = 180; pos >= 90; pos -= 1) {// Skooter slows down from max to null (90)
+	//	turn.write(pos);
+	//	delay(10);							// FIXME use variable described above
+	//}
+}
+
+void Tracks::goForward() 
+{
+	forward.write(90 - MOVE_SPEED);
+	//for (pos = 0; pos <= 90; pos += 1) {
+	//	forward.write(pos);              
+	//	delay(10);                       
+	//}
+	//for (pos = 90; pos >= 0; pos -= 1) { 
+	//	forward.write(pos);              
+	//	delay(10);                       
+	//}
+}
+
+void Tracks::goBackward()
+{
+	forward.write(90 + MOVE_SPEED);
+	//for (pos = 90; pos <= 180; pos += 1) {	// Skooter speeds up from null (90) to max
+	//	forward.write(pos);
+	//	delay(10);							// slows down behavior FIXME make this into a variable we can control
+	//}
+	//for (pos = 180; pos >= 90; pos -= 1) {	// Skooter slows down from max to null (90)
+	//	forward.write(pos);
+	//	delay(10);							// FIXME use variable described above
+	//}
+}
+
+void Tracks::stop()
+{
+	forward.write(90);
+	turn.write(90);
 }
