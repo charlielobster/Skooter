@@ -16,6 +16,7 @@ public:
 
 	void goForward();
 	void goBackward();
+
 	void stop();
 
 private:
