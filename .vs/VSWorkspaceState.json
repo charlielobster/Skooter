@@ -1,8 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Skooter"
+    "\\Skooter",
+    "\\Skooter\\Skooter_11_15_2019",
+    "\\VisualStudio",
+    "\\VisualStudio\\Skooter"
   ],
-  "SelectedNode": "\\Skooter\\Skooter_11_15_2019",
+  "SelectedNode": "\\VisualStudio\\Skooter\\Skooter.sln",
   "PreviewInSolutionExplorer": false
 }

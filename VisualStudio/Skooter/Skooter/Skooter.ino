@@ -1,13 +1,32 @@
+#include <LIDARLite.h>
 #include "Tracks.h"
+#include "Lidar.h"
+#include "PanTilt.h"
 
 Tracks tracks;
+PanTilt panTilt;
+Lidar lidar;
 
-void setup() {
-	tracks.attach(9, 11);
+void setup() 
+{
+	tracks.attach(11, 10);
+	panTilt.attach(9, 6);
+	panTilt.setTiltRange(110, 180);
+	lidar.setup();
 }
 
 void loop() {
-	tracks.turnRight();				// FIXME there is a weird overlap going on here where one of the turns is affecting the other
+
+	panTilt.lookPan();
+	delay(500);
+	panTilt.lookTilt();
+	delay(500);
+
+	int d = lidar.measure();
+	Serial.println(d);
+	delay(5);
+
+	tracks.turnRight();				
 	delay(500);
 	tracks.stop();
 	delay(500);
@@ -22,5 +41,6 @@ void loop() {
 	tracks.goBackward();
 	delay(500);
 	tracks.stop();
+	
 	delay(500);
 }

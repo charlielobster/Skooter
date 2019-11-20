@@ -9,22 +9,22 @@ void Tracks::attach(int f, int t)
 
 void Tracks::turnRight() 
 {
-	turn.write(90 - TURN_SPEED);
+	turn.write(90 + TURN_SPEED);
 }
 
 void Tracks::turnLeft()
 {
-	turn.write(90 + TURN_SPEED);
+	turn.write(90 - TURN_SPEED);
 }
 
 void Tracks::goForward() 
 {
-	forward.write(90 - MOVE_SPEED);
+	forward.write(90 + MOVE_SPEED);
 }
 
 void Tracks::goBackward()
 {
-	forward.write(90 + MOVE_SPEED);
+	forward.write(90 - MOVE_SPEED);
 }
 
 void Tracks::stop()

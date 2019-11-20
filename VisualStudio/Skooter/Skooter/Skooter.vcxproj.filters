@@ -21,10 +21,22 @@
     <ClInclude Include="Tracks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Lidar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PanTilt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Skooter.ino" />
     <None Include="Tracks.ino">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Lidar.ino">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="PanTilt.ino">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
