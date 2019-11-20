@@ -9,3 +9,7 @@
 *.opendb
 *.suo
 /VisualStudio/Skooter/.vs/Skooter/v15/ipch/AutoPCH
+/VisualStudio/SkooterSketch/SkooterSketch.vcxproj.filters
+/VisualStudio/SkooterSketch/SkooterSketch.vcxproj.user
+/VisualStudio/SkooterSketch/__vm
+/VisualStudio/SkooterSketch/Debug
