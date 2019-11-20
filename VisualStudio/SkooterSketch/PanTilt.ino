@@ -18,23 +18,28 @@ void PanTilt::lookPan()
 	pan.write(0);
 	delay(500);
 
-	for (int panAngle = 0; panAngle <= 180; panAngle++) {
+	for (int panAngle = 0; panAngle < 180; panAngle++) {
 		pan.write(panAngle);
-		delay(15);
+		delay(25);
 	}
 
-	pan.write(90);
+	pan.write(180);
+	delay(500);
+
 }
 
 void PanTilt::lookTilt() 
 {
+	tilt.write(minTilt);
+	delay(1000);
+
 	for (int tiltAngle = minTilt; tiltAngle <= maxTilt; tiltAngle++) {
 		tilt.write(tiltAngle);
-		delay(15);
+		delay(25);
 	}
 
-	tilt.write(minTilt);
-	delay(15);
+	tilt.write(maxTilt);
+	delay(1000);
 }
 
 void PanTilt::lookScan() 

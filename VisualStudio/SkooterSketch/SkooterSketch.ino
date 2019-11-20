@@ -8,7 +8,7 @@
 Skooter skooter;
 
 void setup() {
-	skooter.setup(11, 10, 9, 6, 110, 180);
+	skooter.setup(5, 3, 9, 6, 28, 118);
 }
 
 void loop() {

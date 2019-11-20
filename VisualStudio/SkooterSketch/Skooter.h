@@ -4,6 +4,7 @@
 #include "Lidar.h"
 #include "PanTilt.h"
 #include "Tracks.h"
+#include "Cabinet.h"
 
 class Skooter
 {
@@ -14,6 +15,7 @@ private:
 	Lidar lidar;
 	PanTilt panTilt;
 	Tracks tracks;
+	Cabinet cabinet;
 };
 
 #endif
