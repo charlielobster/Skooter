@@ -107,6 +107,7 @@
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Cabinet.ino" />
     <None Include="Lidar.ino" />
     <None Include="PanTilt.ino" />
     <None Include="Skooter.ino" />
