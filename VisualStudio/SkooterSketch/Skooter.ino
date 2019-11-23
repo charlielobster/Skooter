@@ -11,6 +11,7 @@ void Skooter::setup(int forwardPin, int turnPin, int panPin, int tiltPin, int mi
 
 void Skooter::doStuff()
 {
+//	cabinet.writePosition(x, y, forwardAngle, panAngle, tiltAngle, d);
 	//panTilt.lookPan();
 	//delay(500);
 	//panTilt.lookTilt();

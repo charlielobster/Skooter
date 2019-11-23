@@ -25,6 +25,7 @@ public:
 	// MKRZero SD: SDCARD_SS_PIN
 	const int chipSelect = 10;
 	void setup();
+	void writePosition(float x, float y, float forwardAngle, float panAngle, float tiltAngle, int distance);
 };
 
 #endif
