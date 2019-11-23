@@ -41,22 +41,23 @@ void Skooter::doStuff() // function "do stuff" belongs to the class "Skooter"
 }
 
 //FIXME ONLY RUN IF IN FRONT OF WALL
-int calTilt() {
-  int calibratedTilt = minTilt;
-  float minDistance = 9999.9;
+int Skooter::calTilt() 
+{
+	int minTilt = panTilt.getMinTilt();
+	int maxTilt = panTilt.getMaxTilt();
+	int calibratedTilt = minTilt;
+	float minDistance = 9999.9;
 
-  pan.write(calibratedPan);
-  delay(250);
-  tilt.write(calibratedTilt);
-  delay(250);
+	panTilt.tiltWrite(calibratedTilt);
+	delay(250);
 
   for (int tiltAngle = minTilt; tiltAngle <= maxTilt; tiltAngle++) {
-    tilt.write(tiltAngle);
+    panTilt.tiltWrite(tiltAngle);
     delay(15);
 
-    int sum = eye.distance();
+    int sum = lidar.measure();
     for (int i = 0; i < 9; i++) {
-      sum = sum + eye.distance(false);
+		sum = sum + lidar.measure();
     }
     float avgDistance = sum / 10.0;
 
@@ -67,29 +68,27 @@ int calTilt() {
 
   }
 
-  tilt.write(calibratedTilt);
-  delay(250);
+  panTilt.setCalibratedTilt(calibratedTilt);
   
   return calibratedTilt;
 }
 
 
-int calingPan() {
+int Skooter::calingPan() 
+{
   int calibratedPan = 0;
   float minDistance = 9999.9;
 
-  pan.write(calibratedPan);
-  delay(250);
-  tilt.write(calibratedTilt);
-  delay(250);
+  panTilt.calibrate();
+  delay(50);
 
   for (int panAngle = 0; panAngle < 180; panAngle++) {
-    pan.write(panAngle);
+    panTilt.panWrite(panAngle);
     delay(15);
 
-    int sum = eye.distance();
+    int sum = lidar.measure();
     for (int i = 0; i < 9; i++) {
-      sum = sum + eye.distance(false);
+      sum = sum + lidar.measure();
     }
     float avgDistance = sum / 10.0;
 
@@ -100,24 +99,25 @@ int calingPan() {
 
   }
 
-  pan.write(calibratedPan);
+  panTilt.panWrite(calibratedPan);
   delay(250);
   
   return calibratedPan;
 
 }
 
-int calPan() {
-  calingPan();
-  while (calibratedPan < 85 || calibratedPan > 95) {
-    if (calibratedPan < 85) {
-      tracks.turnLeft(90-/*calibratedPan*/); //FIXME turnRight has to be able to take in a degree and turn long enough to reach that degree then stop
-    }
-    else if (calibratedPan > 95) {
-      tracks.turnRight(180-/*calibratedPan*/); //FIXME as above and also check which direction each one is
-    }
-    calingPan();
-  }
-  
-  return calibratedPan;
+int Skooter::calPan() 
+{
+  //calingPan();
+  //while (calibratedPan < 85 || calibratedPan > 95) {
+  //  if (calibratedPan < 85) {
+  //    tracks.turnLeft(90-/*calibratedPan*/); //FIXME turnRight has to be able to take in a degree and turn long enough to reach that degree then stop
+  //  }
+  //  else if (calibratedPan > 95) {
+  //    tracks.turnRight(180-/*calibratedPan*/); //FIXME as above and also check which direction each one is
+  //  }
+  //  calingPan();
+  //}
+  //
+  //return calibratedPan;
 }

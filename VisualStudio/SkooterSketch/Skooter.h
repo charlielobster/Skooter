@@ -11,6 +11,10 @@ class Skooter
 public:  // functions are accessible outside of the class "Skooter"
 	void setup(int forwardPin, int turnPin, int panPin, int tiltPin, int minTilt, int maxTilt); 
 	void doStuff(); 
+	int calTilt();
+	int calingPan();
+	int calPan();
+
 private: // classes are inaccessible outside of the class "Skooter" (belong privately to the class "Skooter")
 	Lidar lidar; // classes and their instances, only accessible within class "Skooter" 
 	PanTilt panTilt;

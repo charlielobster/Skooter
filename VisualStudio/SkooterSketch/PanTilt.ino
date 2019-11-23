@@ -6,10 +6,10 @@ void PanTilt::attach(int p, int t) // the function "attach" belongs to the class
 	tilt.attach(t); // calls the the function "attach" to the variable (instance), of type Servo, "tilt"
 }
 
-void PanTilt::setTiltRange(int min, int max) // the function "setTiltRange" belongs to the class (::) "PanTilt"
+void PanTilt::setTiltRange(int minT, int maxT) // the function "setTiltRange" belongs to the class (::) "PanTilt"
 {
-	minTilt = min; // defines variables (provides them with values (min and max)) belonging to class "PanTilt"
-	maxTilt = max;
+	minTilt = minT; // defines variables (provides them with values (min and max)) belonging to class "PanTilt"
+	maxTilt = maxT;
 }
 
 void PanTilt::lookPan() // the function "lookPan" belongs to the class the class (::) "PanTilt"
@@ -49,6 +49,7 @@ void PanTilt::lookScan() // the function "lookScan" belongs to the class (::) "P
 	tilt.write(0); // calls the function "write" (writes a value of '0' to the step servo) to the variable (instance), of type Servo, "tilt"
 
 	for (int tiltAngle = minTilt; tiltAngle <= maxTilt; tiltAngle++) { 
+		tilt.write(tiltAngle);
 		for (int panAngle = 0; panAngle <= 180; panAngle++) { // pans the lidar horizontally (parallel to the plane in which Skooter rests) 180 degrees in steps of "panAngle"
 			pan.write(panAngle); // calls the function "write" (writes the value of "panAngle" passed in from the for loop to the step servo) to the variable (instance), of type Servo, "pan"
 		//	LIDAR();
@@ -59,9 +60,68 @@ void PanTilt::lookScan() // the function "lookScan" belongs to the class (::) "P
 			pan.write(panAngle); // calls the function "write" (writes a value of "panAngle" passed in from the for loop to the step servo) to the variable (instance) of "pan"
 		//	LIDAR();
 		}
+
 	}
 
 	//reset to flat, 36 degrees, facing forward
 	tilt.write(minTilt); // calls the function "write" (writes a value of "minTilt" to the step servo) to the variable (instance) of "tilt"
 	pan.write(90); // calls the function "write" (writes a value of '90' to the step servo) to the variable (instance) of "pan"
+}
+
+int PanTilt::getMinTilt() 
+{ 
+	return minTilt; 
+}
+
+int PanTilt::getMaxTilt() 
+{ 
+	return maxTilt; 
+}
+
+int PanTilt::getPanAngle() 
+{ 
+	return panAngle; 
+}
+
+int PanTilt::getTiltAngle() 
+{ 
+	return tiltAngle;
+}
+
+void PanTilt::panWrite(int angle) 
+{ 
+	panAngle = angle;  
+	pan.write(panAngle); 
+}
+
+void PanTilt::tiltWrite(int angle) 
+{ 
+	tiltAngle = angle; 
+	tilt.write(tiltAngle); 
+}
+
+int PanTilt::getCalibratedPan() 
+{ 
+	return calibratedPan;
+}
+
+int PanTilt::getCalibratedTilt() 
+{ 
+	return calibratedTilt; 
+}
+
+void PanTilt::setCalibratedPan(int cp) 
+{ 
+	calibratedPan = cp; 
+}
+
+void PanTilt::setCalibratedTilt(int ct) 
+{ 
+	calibratedPan = ct; 
+}
+
+void PanTilt::calibrate() 
+{ 
+	pan.write(calibratedPan); 
+	tilt.write(calibratedTilt); 
 }
