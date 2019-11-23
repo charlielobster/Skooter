@@ -1,6 +1,6 @@
-#include "Cabinet.h"
+#include "Cabinet.h" // gives this sketch access to the definitions in the header file "Cabinet.h"
 
-void Cabinet::setup() 
+void Cabinet::setup() // the function "setup" belongs to the class "Cabinet"
 {
 	// Open serial communications and wait for port to open:
 

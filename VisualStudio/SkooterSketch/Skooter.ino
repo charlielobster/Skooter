@@ -1,15 +1,15 @@
-#include "Skooter.h"
+#include "Skooter.h" // gives source file "Skooter" access to the library "Skooter.h"
 
-void Skooter::setup(int forwardPin, int turnPin, int panPin, int tiltPin, int minTilt, int maxTilt) 
+void Skooter::setup(int forwardPin, int turnPin, int panPin, int tiltPin, int minTilt, int maxTilt) // function "setup" (initializes variables, pin modes, start using libraries, etc.) belongs to class "Skooter"  
 {
-	cabinet.setup();
+	cabinet.setup(); // calls the function "setup" to the variable (instance), cabinet, which belongs to the class "Cabinet", which belongs, privately, to the class "Skooter"
 	//tracks.attach(forwardPin, turnPin);
 	//panTilt.attach(panPin, tiltPin);
 	//panTilt.setTiltRange(minTilt, maxTilt);
 	//lidar.setup();
 }
 
-void Skooter::doStuff()
+void Skooter::doStuff() // function "do stuff" belongs to the class "Skooter"
 {
 //	cabinet.writePosition(x, y, forwardAngle, panAngle, tiltAngle, d);
 	//panTilt.lookPan();
