@@ -3,7 +3,7 @@
 // https://en.wikipedia.org/wiki/Include_guard
 #define _SKOOTER_
 
-// preprocessor directives: make all the declarations (types, static variables, contracts etc) in these header files available to this header file
+// preprocessor directives: make all the declarations, types, static variables, etc in these header files available to this header file
 #include "Lidar.h" 
 #include "PanTilt.h"
 #include "Tracks.h"
