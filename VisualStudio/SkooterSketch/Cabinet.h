@@ -3,10 +3,10 @@
 // https://en.wikipedia.org/wiki/Include_guard
 #define _CABINET_
 
-#include <SPI.h> // includes the libraries "SPI" and "SD" making them accesible to the header file "Cabinet.h"
+#include <SPI.h> // include the declarations etc made in "SPI" and "SD", making them accesible to the header file "Cabinet.h"
 #include <SD.h>
 
-class Cabinet // creation of the class "Cabinet"
+class Cabinet // declaration of the class "Cabinet"
 {
 public:
 	//SD card attached to SPI bus as follows:
@@ -28,7 +28,8 @@ public:
 	const int chipSelect = 10;
 
 	File lidarData; 
-	// lidarData: declare an instance of the class "File" (a class contains consts, member functions, and member variables)
+	// lidarData: declare an instance of the class "File" 
+	// (a class contains consts, member functions, and member variables)
 	
 	// function declarations : return type void (no objects returned)
 	void setup();
