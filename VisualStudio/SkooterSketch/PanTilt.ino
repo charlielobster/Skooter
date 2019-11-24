@@ -11,7 +11,7 @@ void PanTilt::attach(int p, int t)
 // the function "setTiltRange" belongs to the class "PanTilt"
 void PanTilt::setTiltRange(int minT, int maxT)
 {
-	m_minTilt = minT; // defines variables (provides them with values (minT and maxT)) belonging to class "PanTilt"
+	m_minTilt = minT; // defines variables (provides them with values minT and maxT) belonging to class "PanTilt"
 	m_maxTilt = maxT;
 }
 
