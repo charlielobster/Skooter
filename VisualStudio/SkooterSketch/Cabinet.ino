@@ -82,7 +82,7 @@ void Cabinet::setup() // the function "setup" belongs to the class "Cabinet"
 
 int Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d)
 {
-	char data[100]; // out data buffer for a line in the file
+	char data[100]; // data buffer for a line in the file
 
 	// Serial.begin(9600);s
 	while (!Serial) {
