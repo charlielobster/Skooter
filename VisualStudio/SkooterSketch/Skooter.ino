@@ -70,30 +70,33 @@ void Skooter::lookScan()
 {
 	// Skooter goes to its zeroes
 	panTilt.calibrate();
+	delay(250);
 
 	for (int t = panTilt.minTilt(); t <= panTilt.maxTilt(); t++) {
 		
 		panTilt.tiltWrite(t);
 
-		// pans the lidar horizontally 
-		// (ie. it scans a plane which deviates from the calibrated tilt angle by the current tiltAngle), 
-		// 181 times between 0 and 180 degrees, in steps of 1
+		// pan the lidar along a plane which deviates from a plane parallel with the floor by the angle (tiltAngle - calibratedAngle)
+		// collect 181 readings between 0 and 180 degrees, in steps of 1
 		for (int p = 0; p <= 180; p++) {
 
-			// calls the function write (writes the value of p the for loop in this scope) to the instance of PanTilt we called panTilt
+			// call the function panWrite with a value of p to the instance of PanTilt we named panTilt
 			panTilt.panWrite(p);
+			// write the lidar distance, tracks, and panTilt related data to the file cabinet...
 			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
 		}
 
 		t++; // increment t again
 
-		// call the function write (write a value of t passed in from the for loop to the step servo) to the variable (instance) tilt
+		// call the function tiltWrite with a value of t to the instance of PanTilt called panTilt
 		panTilt.tiltWrite(t);
 
-		for (int p = 180; p >= 0; p--) { 
-			// pans the lidar from 180 degrees to 0 in steps of panAngle
-			panTilt.panWrite(p); 
-			// calls the function write (writes a value of panAngle passed in from the for loop to the step servo) to the variable (instance) of pan
+		// pan the lidar along a plane which deviates from a plane parallel with the floor by the angle (tiltAngle - calibratedAngle)
+		// collect 181 readings between 180 degrees and 0 degrees, in steps of 1
+		for (int p = 180; p >= 0; p--) {
+			// call the function panWrite with a value of p on the instance of PanTilt we called panTilt
+			panTilt.panWrite(p);
+			// write the lidar distance, tracks, and panTilt related data to the file cabinet...
 			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
 		}
 	}
@@ -149,7 +152,7 @@ int Skooter::calingPan()
 
     int sum = lidar.distance();
     for (int i = 0; i < 9; i++) {
-      sum = sum + lidar.distance();
+      sum += lidar.distance();
     }
     float avgDistance = sum / 10.0;
 
