@@ -3,25 +3,28 @@
 
 #include <Servo.h> // makes Servo library available to the sketch and includes it in the code sent to the board
 
-class Tracks // creates class "Tracks"
+// declare class "Tracks"
+class Tracks
 {
-public: // declared instances and functions are accessible outside of the class "Tracks"
-	const int MOVE_SPEED = 15; // instances with values of the data type const int
-	const int TURN_SPEED = 15; // const=constant [Variable Scope & Qualifier], makes variables "read-only" (values cannot be changed), preferred over #define for defining constants
+public:	// accessible outside of the class "Tracks"
 
+	// class consts: these values are referenced with the syntax Tracks::TYPE_NAME since they are not tied to an instance of Tracks
+	// consts are "read-only" (values cannot be changed), preferred over #define for defining constants in C++ classes
+	const int MOVE_SPEED = 15;
+	const int TURN_SPEED = 15; 
+
+							   
+	// class instance member functions
 	void attach(int f, int t); // declaration of various functions
-
 	void turnRight();
 	void turnLeft();
-
 	void goForward();
 	void goBackward();
-
 	void stop();
 
-private: // declared classes and their instances, and variables are NOT accessible outside of the class "Tracks"
+private: // NOT accessible outside of the class "Tracks"
 	Servo forward; // class Servo, instance "forward"
 	Servo turn; // class Servo, instance "turn"
-	int pos = 0; // data type interger (16 bits, 2 bytes), variable "pos", value "0"
+	int pos = 0; // data type integer (16 bits, 2 bytes), variable "pos", value "0"
 };
 #endif

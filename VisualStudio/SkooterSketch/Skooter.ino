@@ -98,9 +98,8 @@ int Skooter::calingPan()
     }
 
   }
-
-  panTilt.panWrite(calibratedPan);
-  delay(250);
+	
+  panTilt.setCalibratedPan(calibratedPan);
   
   return calibratedPan;
 
