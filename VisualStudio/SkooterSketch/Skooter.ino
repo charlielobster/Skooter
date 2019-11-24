@@ -58,7 +58,7 @@ void Skooter::lookTilt()
 {
 	// lidar tilts (rotates about its azimuthal angle) from the angle minTilt to the angle maxTilt in steps of 1
 	for (int a = panTilt.minTilt(); a <= panTilt.maxTilt(); a++) {
-		// call the function tiltWrite (writes the value of a to the tilt servo) declared by the PanTilt instance panTilt
+		// call the function tiltWrite with the value of a to the PanTilt instance panTilt
 		panTilt.tiltWrite(a);
 		delay(25); // delays for 25 ms
 		cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
