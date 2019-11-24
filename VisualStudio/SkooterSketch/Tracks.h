@@ -1,4 +1,6 @@
-#ifndef _TRACKS_ // prevents problems if someone accidentally #include's the library twice
+#ifndef _TRACKS_ 
+// prevent duplicate declaration of types, enums and static variables if this header file is included more than once
+// https://en.wikipedia.org/wiki/Include_guard
 #define _TRACKS_
 
 #include <Servo.h> // makes Servo library available to the sketch and includes it in the code sent to the board

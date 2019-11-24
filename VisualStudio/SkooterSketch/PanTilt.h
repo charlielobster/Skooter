@@ -1,4 +1,6 @@
-#ifndef _PANTILT_ // prevents problems if someone accidentally #include's the library twice
+#ifndef _PANTILT_ 
+// prevent duplicate declaration of types, enums and static variables if this header file is included more than once
+// https://en.wikipedia.org/wiki/Include_guard
 #define _PANTILT_
 
 #include <Servo.h> // grants header file access to the library "Servo"

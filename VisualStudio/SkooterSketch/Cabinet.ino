@@ -80,7 +80,7 @@ void Cabinet::setup() // the function "setup" belongs to the class "Cabinet"
 	root.ls(LS_R | LS_DATE | LS_SIZE);
 }
 
-int Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d)
+void Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d)
 {
 	char data[100]; // data buffer for a line in the file
 

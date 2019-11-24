@@ -1,4 +1,6 @@
-#ifndef _SKOOTER_ // prevents problems if someone accidentally #include's the library twice
+#ifndef _SKOOTER_ 
+// prevent duplicate declaration of types, enums and static variables if this header file is included more than once
+// https://en.wikipedia.org/wiki/Include_guard
 #define _SKOOTER_
 
 #include "Lidar.h" // preprocessor directives, makes all the listed libraries available to this header file

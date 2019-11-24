@@ -1,4 +1,6 @@
-#ifndef _CABINET_ // prevents problems if someone accidentally #include's the library twice
+#ifndef _CABINET_ 
+// prevent duplicate declaration of types, enums and static variables if this header file is included more than once
+// https://en.wikipedia.org/wiki/Include_guard
 #define _CABINET_
 
 #include <SPI.h> // includes the libraries "SPI" and "SD" making them accesible to the header file "Cabinet.h"
@@ -25,11 +27,12 @@ public:
 	// MKRZero SD: SDCARD_SS_PIN
 	const int chipSelect = 10;
 
-  File lidarData; // creates an instance (lidarData) of the class "File"; a class contains functions and variables
-  
+	File lidarData; 
+	// lidarData: declare an instance of the class "File" (a class contains consts, member functions, and member variables)
+	
+	// function declarations : return type void (no objects returned)
 	void setup();
- 
-	void writePosition(float x, float y, float forwardAngle, float panAngle, float tiltAngle, int distance); // function declaration "void"=data type
-
+	void writePosition(int x, int y, int heading, int theta, int phi, int d); 
+};
 
 #endif
