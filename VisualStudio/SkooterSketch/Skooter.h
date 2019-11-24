@@ -21,7 +21,6 @@ public:  // accessible outside of the class "Skooter"
 	void lookTilt();
 	void lookScan();
 
-
 private: // inaccessible outside of the class "Skooter" (these belong privately to the class "Skooter")
 	// lidar, panTilt, tracks, and cabinet are instances of their classes, only accessible within this class, "Skooter" 
 	Lidar lidar;
