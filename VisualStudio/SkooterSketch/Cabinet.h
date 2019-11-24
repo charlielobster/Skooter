@@ -23,6 +23,7 @@ public:
 	// function declarations : return type void (no objects returned)
 	void setup();	// set up variables using the SD utility library functions:
 	void writePosition(int x, int y, int heading, int theta, int phi, int d); 
+	String readLineAtPosition(int position);
 
 private:
 	//SD card attached to SPI bus as follows:

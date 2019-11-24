@@ -80,7 +80,7 @@ void Cabinet::setup() // the function "setup" belongs to the class "Cabinet"
 
 void Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d)
 {
-	char data[100]; // data buffer for a line in the file
+	char data[100]; // buffer for a line in the file
 
 	// Serial.begin(9600);s
 	while (!Serial) {
@@ -95,7 +95,7 @@ void Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d
 	}
 	Serial.println("Initialization complete.");
 
-	// open the file. note that only one file can be open at a time,
+	// open the file. note that only one file can be opened at a time,
 	// so you have to close this one before opening another.
 	lidarData = SD.open("readings.txt", FILE_WRITE); //opens file for reading and writing
 
@@ -112,16 +112,16 @@ void Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d
 		// if the file didn't open, print an error:
 		Serial.println("error opening readings.txt");
 	}
+}
 
+String Cabinet::readLineAtPosition(int position)
+{
 	// re-open the file for reading:
 	lidarData = SD.open("readings.txt");
-	if (lidarData) {
-		Serial.println("readings.txt:");
+	if (lidarData && position < lidarData.size()) {
+		lidarData.seek(position);
+		return lidarData.readStringUntil('\n');
 
-		// read from the file until there's nothing else in it:
-		while (lidarData.available()) {
-			Serial.println(lidarData.read());
-		}
 		// close the file:
 		lidarData.close();
 	}
@@ -130,4 +130,5 @@ void Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d
 		// if the file didn't open, print an error:
 		Serial.println("error opening readings.txt");
 	}
+	return "";
 };

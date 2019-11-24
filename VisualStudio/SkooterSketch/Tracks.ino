@@ -17,7 +17,7 @@ void Tracks::turnRight()
 // the function "turnLeft" belongs to the class "Tracks"
 void Tracks::turnLeft()
 {
-	turn.write(90 - TURN_SPEED); // calls the function "write" (writes a value (speed) to the continuoius rotation servo) to the variable (instance), of type Servo, "turn"; argument of write is a speed
+	turn.write(90 - TURN_SPEED); // call the function "write" (writes a value (speed) to the continuoius rotation servo) to the variable (instance), of type Servo, "turn"; argument of write is a speed
 }
 
 // the function "goForward" belongs to the class "Tracks"
