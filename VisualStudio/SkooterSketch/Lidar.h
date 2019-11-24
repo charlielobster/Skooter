@@ -11,7 +11,7 @@ class Lidar // declare the class "Lidar"
 {
 public: // accessible outside of the class "Lidar"
 	void setup(); // declaration of function "setup"
-	int distance(); // declaration of function "measure" with return type int
+	int distance(); // declaration of function "distance" with return type int
 	
 private: // inaccessible outside of the class "Lidar"
 	LIDARLite eye; // declare Lidarlite instance "eye"
