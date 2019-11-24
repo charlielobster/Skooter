@@ -3,12 +3,13 @@
 // https://en.wikipedia.org/wiki/Include_guard
 #define _PANTILT_
 
-#include <Servo.h> // grants header file access to the library "Servo"
+#include <Servo.h> // include the declarations made in the Servo.h header file
 
-class PanTilt // creates the class "PanTilt"
+class PanTilt // declare class "PanTilt"
 {
-public: // functions are accessible outside of the class "PanTilt"
-	void attach(int p, int t); // declaration of functions
+public: // accessible outside of the class "PanTilt"
+	// function declarations
+	void attach(int p, int t);
 	void setTiltRange(int minT, int maxT);
 	void lookPan();
 	void lookTilt();
@@ -25,11 +26,12 @@ public: // functions are accessible outside of the class "PanTilt"
 	void setCalibratedTilt(int ct);
 	void calibrate();
 	
-private: // instances and variables are NOT inaccessible outside of the class "PanTilt"
-	Servo pan; // creates the instance "pan" of the class "Servo"
-	Servo tilt; // creates the instance "tilt" of the class "Servo"
-	int minTilt; // creates a variable "minTilt" of data type "int"
-	int maxTilt; // creates a variable "maxTilt" of data type "int"
+private: 
+	// inaccessible outside of the class "PanTilt"
+	Servo pan; // declare an instance "pan" of the class "Servo"
+	Servo tilt; // declare an instance "tilt" of the class "Servo"
+	int minTilt; // create a variable "minTilt" of data type "int"
+	int maxTilt; // create a variable "maxTilt" of data type "int"
 	int panAngle; 
 	int tiltAngle;
 	int calibratedTilt;
