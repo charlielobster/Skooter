@@ -54,42 +54,40 @@ void Skooter::lookPan()
 // the function "lookTilt" belonds to the class "Skooter"
 void Skooter::lookTilt()
 {
-	for (int a = panTilt.getMinTilt(); a < panTilt.getMaxTilt(); a++) { // lidar tilts (rotates about its azimuthal angle) from the angle "minTilt" to the angle "maxTilt" in steps of "tiltAngle"
+	for (int a = panTilt.minTilt(); a < panTilt.maxTilt(); a++) { // lidar tilts (rotates about its azimuthal angle) from the angle "minTilt" to the angle "maxTilt" in steps of "tiltAngle"
 		panTilt.tiltWrite(a); // calls the function "write" (writes a value of 'tiltAngle' to the servo) to the variable (instance), of type Servo, "tilt"
 		delay(25); // delays for 25 ms
+
 	}
 }
 
 // the function "lookScan" belongs to the class "Skooter"
 void Skooter::lookScan()
 {
-	// scooter goes to its zeroes
+	// Skooter goes to its zeroes
 	panTilt.calibrate();
 
-	for (int tiltAngle = panTilt.getMinTilt(); tiltAngle <= panTilt.getMaxTilt(); tiltAngle++) {
-		panTilt.tiltWrite(tiltAngle);
-		for (int panAngle = 0; panAngle <= 180; panAngle++) { // pans the lidar horizontally (parallel to the plane in which Skooter rests) 180 degrees in steps of "panAngle"
-			panTilt.panWrite(panAngle); // calls the function "write" (writes the value of "panAngle" passed in from the for loop to the step servo) to the variable (instance), of type Servo, "pan"
-			cabinet.writeLidarData(tracks.x, tracks.y, tracks.heading, tiltAngle, panAngle, lidar.measure());
+	for (int t = panTilt.minTilt(); t <= panTilt.maxTilt(); t++) {
+		panTilt.tiltWrite(t);
+		for (int p = 0; p <= 180; p++) { // pans the lidar horizontally (parallel to the plane in which Skooter rests) 180 degrees in steps of "panAngle"
+			panTilt.panWrite(p); // calls the function "write" (writes the value of "panAngle" passed in from the for loop to the step servo) to the variable (instance), of type Servo, "pan"
+			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.measure());
 		}
-		tiltAngle++; // increments the "tiltAngle" in steps of "tiltAngle" (seems superfluous, imo)
-		panTilt.tiltWrite(tiltAngle); // calls the function "write" (writes a value of "tiltAngle" passed in from the for loop to the step servo) to the variable (instance) "tilt"
-		for (int panAngle = 180; panAngle >= 0; panAngle--) { // pans the lidar from 180 degrees to 0 in steps of "panAngle"
-			panTilt.panWrite(panAngle); // calls the function "write" (writes a value of "panAngle" passed in from the for loop to the step servo) to the variable (instance) of "pan"
-			cabinet.writeLidarData(tracks.x, tracks.y, tracks.heading, tiltAngle, panAngle, lidar.measure());
+		t++; // increments the "tiltAngle" in steps of "tiltAngle" (seems superfluous, imo)
+		panTilt.tiltWrite(t); // calls the function "write" (writes a value of "tiltAngle" passed in from the for loop to the step servo) to the variable (instance) "tilt"
+		for (int p = 180; p >= 0; p--) { // pans the lidar from 180 degrees to 0 in steps of "panAngle"
+			panTilt.panWrite(p); // calls the function "write" (writes a value of "panAngle" passed in from the for loop to the step servo) to the variable (instance) of "pan"
+			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), t, p, lidar.measure());
 		}
-
 	}
-
 	panTilt.calibrate();
 }
-
 
 //FIXME ONLY RUN IF IN FRONT OF WALL
 int Skooter::calTilt() 
 {
-	int minTilt = panTilt.getMinTilt();
-	int maxTilt = panTilt.getMaxTilt();
+	int minTilt = panTilt.minTilt();
+	int maxTilt = panTilt.maxTilt();
 	int calibratedTilt = minTilt;
 	float minDistance = 9999.9;
 

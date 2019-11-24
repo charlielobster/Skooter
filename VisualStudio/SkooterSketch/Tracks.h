@@ -24,12 +24,13 @@ public:	// accessible outside of the class "Tracks"0
 	void attach(int f, int t);
 	void turnRight();
 	void turnLeft();
+	void turnToAngle(int angle);
 	void goForward();
 	void goBackward();
 	void stop();
-	inline int heading() const { return m_heading; }
-	inline int x() const { return m_x; }
-	inline int y() const { return m_y; }
+	inline int heading() { return m_heading; }
+	inline int x() { return m_x; }
+	inline int y() { return m_y; }
 
 private: // inaccessible outside of "Tracks"
 	Servo forward; // class Servo, instance "forward" - (note: compile-time error if no #include <Servo.h>)

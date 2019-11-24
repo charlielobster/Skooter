@@ -11,27 +11,27 @@ public: // accessible outside of the class "PanTilt"
 	// function declarations
 	void attach(int p, int t);
 	void setTiltRange(int minT, int maxT);
-	int getMinTilt();
-	int getMaxTilt();
-	int getPanAngle();
-	int getTiltAngle();
+	inline int minTilt() { return m_minTilt; }
+	inline int maxTilt() { return m_maxTilt; }
+	inline int panAngle() { return m_panAngle; }
+	inline int tiltAngle() { return m_tiltAngle; }
 	void panWrite(int angle);
 	void tiltWrite(int angle);
-	int getCalibratedPan();
-	int getCalibratedTilt();
+	inline int calibratedPan() { return m_calibratedPan; }
+	inline int calibratedTilt() { return m_calibratedTilt; }
 	void setCalibratedPan(int cp);
 	void setCalibratedTilt(int ct);
 	void calibrate();
 	
 private: // inaccessible outside of the class "PanTilt"
-	Servo pan; // declare an instance "pan" of the class "Servo"
-	Servo tilt; // declare an instance "tilt" of the class "Servo"
-	int minTilt; // declare a variable "minTilt" of data type int
-	int maxTilt; // declare a variable "maxTilt" of data type int
-	int panAngle; 
-	int tiltAngle;
-	int calibratedTilt;
-	int calibratedPan;
+	Servo m_pan; // declare an instance "m_pan" of the class "Servo"
+	Servo m_tilt; // declare an instance "m_tilt" of the class "Servo"
+	int m_minTilt; // declare a variable "m_minTilt" of data type int
+	int m_maxTilt; // declare a variable "m_maxTilt" of data type int
+	int m_panAngle; 
+	int m_tiltAngle;
+	int m_calibratedTilt;
+	int m_calibratedPan;
 };
 
 #endif
