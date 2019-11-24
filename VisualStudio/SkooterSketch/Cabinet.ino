@@ -79,3 +79,54 @@ void Cabinet::setup() // the function "setup" belongs to the class "Cabinet"
 	// list all files in the card with date and size
 	root.ls(LS_R | LS_DATE | LS_SIZE);
 }
+
+int Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d)
+{
+
+	// Serial.begin(9600);s
+	while (!Serial) {
+		; // wait for serial port to connect. Needed for native USB port only
+	}
+
+	Serial.print("Initializing SD card...");
+
+	if (!SD.begin(10)) {
+		Serial.println("Initialization failed!");
+		while (1); // creates and infinite loop
+	}
+	Serial.println("Initialization complete.");
+
+	// open the file. note that only one file can be open at a time,
+	// so you have to close this one before opening another.
+	lidarData = SD.open("readings.txt", FILE_WRITE); //opens file for reading and writing
+
+	// if the file opened okay, write to it:
+	if (lidarData) {
+		Serial.print("Writing to readings...");
+		lidarData.println("testing 1, 2, 3.");
+		// close the file:
+		lidarData.close();
+		Serial.println("Complete.");
+	}
+	else {
+		// if the file didn't open, print an error:
+		Serial.println("error opening readings.txt");
+	}
+
+	// re-open the file for reading:
+	lidarData = SD.open("readings.txt");
+	if (lidarData) {
+		Serial.println("readings.txt:");
+
+		// read from the file until there's nothing else in it:
+		while (lidarData.available()) {
+			Serial.write(lidarData.read());
+		}
+		// close the file:
+		lidarData.close();
+	}
+	else {
+		// if the file didn't open, print an error:
+		Serial.println("error opening readings.txt");
+	}
+};
