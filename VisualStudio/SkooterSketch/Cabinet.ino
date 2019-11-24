@@ -2,8 +2,6 @@
 
 void Cabinet::setup() // the function setup belongs to the class Cabinet
 {
-	// Open serial communications and wait for port to open:
-
 	// we'll use the initialization code from the utility libraries
 	// since we're just testing if the card is working!
 	if (!card.init(SPI_HALF_SPEED, CHIP_SELECT)) {
