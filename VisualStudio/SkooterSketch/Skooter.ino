@@ -58,7 +58,7 @@ void Skooter::lookTilt()
 {
 	// lidar tilts (rotates about its azimuthal angle) from the angle minTilt to the angle maxTilt in steps of 1
 	for (int a = panTilt.minTilt(); a <= panTilt.maxTilt(); a++) {
-		// call the function tiltWrite with the value of a to the PanTilt instance panTilt
+		// call the PanTilt instance panTilt's function tiltWrite, with the value of a 
 		panTilt.tiltWrite(a);
 		delay(25); // delays for 25 ms
 		cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
@@ -80,9 +80,9 @@ void Skooter::lookScan()
 		// collect 181 readings between 0 and 180 degrees, in steps of 1
 		for (int p = 0; p <= 180; p++) {
 
-			// call the function panWrite with a value of p to the instance of PanTilt we named panTilt
+			// call the PanTilt instance panTilt's function panWrite, with the value of p
 			panTilt.panWrite(p);
-			// write the lidar distance, tracks, and panTilt related data to the file cabinet...
+			// write the lidar distance, tracks, and panTilt related data to the cabinet...
 			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
 		}
 
@@ -94,9 +94,9 @@ void Skooter::lookScan()
 		// pan the lidar along a plane which deviates from a plane parallel with the floor by the angle (tiltAngle - calibratedAngle)
 		// collect 181 readings between 180 degrees and 0 degrees, in steps of 1
 		for (int p = 180; p >= 0; p--) {
-			// call the function panWrite with a value of p on the instance of PanTilt we called panTilt
+			// call PanTilt instance panTilt's function panWrite, with the value of p 
 			panTilt.panWrite(p);
-			// write the lidar distance, tracks, and panTilt related data to the file cabinet...
+			// write the lidar distance, tracks, and panTilt related data to the cabinet...
 			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
 		}
 	}
