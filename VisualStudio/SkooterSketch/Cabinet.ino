@@ -82,6 +82,7 @@ void Cabinet::setup() // the function "setup" belongs to the class "Cabinet"
 
 int Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d)
 {
+	char data[100]; // out data buffer for a line in the file
 
 	// Serial.begin(9600);s
 	while (!Serial) {
@@ -102,8 +103,9 @@ int Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d)
 
 	// if the file opened okay, write to it:
 	if (lidarData) {
-		Serial.print("Writing to readings...");
-		lidarData.println("testing 1, 2, 3.");
+		sprintf(data, "%d,%d,%d,%d,%d,%d", x, y, heading, theta, phi, d);
+		Serial.println(data);
+		lidarData.println(data);
 		// close the file:
 		lidarData.close();
 		Serial.println("Complete.");
@@ -120,12 +122,13 @@ int Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d)
 
 		// read from the file until there's nothing else in it:
 		while (lidarData.available()) {
-			Serial.write(lidarData.read());
+			Serial.println(lidarData.read());
 		}
 		// close the file:
 		lidarData.close();
 	}
-	else {
+	else 
+	{
 		// if the file didn't open, print an error:
 		Serial.println("error opening readings.txt");
 	}

@@ -1,4 +1,4 @@
-#include "Tracks.h" // gives this sketch access to the definitions in the header file "Tracks.h"
+#include "Tracks.h" // gives this implementation file access to the definitions in the header file "Tracks.h"
 
 void Tracks::attach(int f, int t) // the function "attach" belongs to the class (::)  "Tracks"
 {
