@@ -4,8 +4,8 @@
 // the use of the :: operator indicates a class-level declaration (ie. it is a definition "shared" by all the instances of this class)
 void PanTilt::attach(int p, int t)
 {
-	m_pan.attach(p); // calls the function "attach" to the variable (instance), of type Servo, "pan"
-	m_tilt.attach(t); // calls the the function "attach" to the variable (instance), of type Servo, "tilt"
+	m_pan.attach(p); // calls the function "attach" to the variable (instance), of type Servo, "m_pan"
+	m_tilt.attach(t); // calls the the function "attach" to the variable (instance), of type Servo, "m_tilt"
 }
 
 // the function "setTiltRange" belongs to the class "PanTilt"
