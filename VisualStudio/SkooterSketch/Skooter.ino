@@ -88,7 +88,7 @@ void Skooter::lookScan()
 
 		t++; // increment t again
 
-		// call the function tiltWrite with a value of t to the instance of PanTilt called panTilt
+		// call the PanTilt instance panTilt's function tiltWrite, with the value of t 
 		panTilt.tiltWrite(t);
 
 		// pan the lidar along a plane which deviates from a plane parallel with the floor by the angle (tiltAngle - calibratedAngle)
