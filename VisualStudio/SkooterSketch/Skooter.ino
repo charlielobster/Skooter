@@ -1,6 +1,7 @@
 #include "Skooter.h" // gives source file "Skooter" access to the library "Skooter.h"
 
-void Skooter::setup(int forwardPin, int turnPin, int panPin, int tiltPin, int minTilt, int maxTilt) // function "setup" (initializes variables, pin modes, start using libraries, etc.) belongs to class "Skooter"  
+// function "setup" (initializes variables, pin modes, start using libraries, etc.) belongs to class "Skooter"  
+void Skooter::setup(int forwardPin, int turnPin, int panPin, int tiltPin, int minTilt, int maxTilt)
 {
 	cabinet.setup(); // calls the function "setup" to the variable (instance), cabinet, which belongs to the class "Cabinet", which belongs, privately, to the class "Skooter"
 	//tracks.attach(forwardPin, turnPin);

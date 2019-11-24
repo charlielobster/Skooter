@@ -5,7 +5,7 @@
 
 #include <LIDARLite.h> 
 // include Lidarlite header files, 
-// (making its declarations, types, enums, and static variables available to those declared in this header file, "Lidar.h")
+// (thereby making its declarations, types, enums, and static variables available to whatever is being declared in this header file, "Lidar.h")
 
 class Lidar // declare the class "Lidar"
 {

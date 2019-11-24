@@ -120,10 +120,11 @@ String Cabinet::readLineAtPosition(int position)
 	String s = "";
 	lidarData = SD.open("readings.txt");
 	// if the lidarData instance is returning something not 0 and position is inside the file 
-	// and we successfully went to it with a call to seek()... - whew! sometimes the code is a lot easier to write than to explain!
+	// and we successfully went to it with a call to seek()... 
+	// whew! sometimes the code is a lot easier to write than to explain!
 	if (lidarData && position < lidarData.size() && lidarData.seek(position)) 
 	{ 
-		// read the string there...
+		// read the string we find at position...
 		s = lidarData.readStringUntil('\n');
 		// close the file:
 		lidarData.close();
@@ -133,5 +134,6 @@ String Cabinet::readLineAtPosition(int position)
 		// if the file didn't open, print an error:
 		Serial.println("error opening readings.txt");
 	}
+	// whether we found something or not, return a String
 	return s;
 };

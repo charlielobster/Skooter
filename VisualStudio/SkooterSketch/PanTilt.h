@@ -29,8 +29,8 @@ public: // accessible outside of the class "PanTilt"
 private: // inaccessible outside of the class "PanTilt"
 	Servo pan; // declare an instance "pan" of the class "Servo"
 	Servo tilt; // declare an instance "tilt" of the class "Servo"
-	int minTilt; // create a variable "minTilt" of data type "int"
-	int maxTilt; // create a variable "maxTilt" of data type "int"
+	int minTilt; // declare a variable "minTilt" of data type int
+	int maxTilt; // declare a variable "maxTilt" of data type int
 	int panAngle; 
 	int tiltAngle;
 	int calibratedTilt;
