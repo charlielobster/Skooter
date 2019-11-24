@@ -6,15 +6,21 @@
 #include <SPI.h> // include the "SPI" and "SD" header files, making their declarations, types, and static variables accesible to this header file, "Cabinet.h"
 #include <SD.h>
 
+// change this to match your SD shield or module;
+// Arduino Ethernet shield: pin 4
+// Adafruit SD shields and modules: pin 10
+// Sparkfun SD shield: pin 8
+// MKRZero SD: SDCARD_SS_PIN
+// SD card attached to SPI bus as follows:
+// ** MOSI - pin 11 on Arduino Uno/Duemilanove/Diecimila
+// ** MISO - pin 12 on Arduino Uno/Duemilanove/Diecimila
+// ** CLK - pin 13 on Arduino Uno/Duemilanove/Diecimila
+// ** CS - pin 10
+
 class Cabinet // declaration of the class "Cabinet"
 {
 public:
-	// change this to match your SD shield or module;
-	// Arduino Ethernet shield: pin 4
-	// Adafruit SD shields and modules: pin 10
-	// Sparkfun SD shield: pin 8
-	// MKRZero SD: SDCARD_SS_PIN
-	const int chipSelect = 10;
+	const int CHIP_SELECT = 10;
 
 	File lidarData; 
 	// lidarData: declare an instance of the class "File" 
@@ -26,12 +32,6 @@ public:
 	String readLineAtPosition(int position);
 
 private:
-	//SD card attached to SPI bus as follows:
-	//** MOSI - pin 11 on Arduino Uno/Duemilanove/Diecimila
-	//** MISO - pin 12 on Arduino Uno/Duemilanove/Diecimila
-	//** CLK - pin 13 on Arduino Uno/Duemilanove/Diecimila
-	//** CS - pin 10
-
 	Sd2Card card;
 	SdVolume volume;
 	SdFile root;

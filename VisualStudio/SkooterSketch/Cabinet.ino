@@ -12,7 +12,7 @@ void Cabinet::setup() // the function "setup" belongs to the class "Cabinet"
 
 	// we'll use the initialization code from the utility libraries
 	// since we're just testing if the card is working!
-	if (!card.init(SPI_HALF_SPEED, chipSelect)) {
+	if (!card.init(SPI_HALF_SPEED, CHIP_SELECT)) {
 		Serial.println("initialization failed. Things to check:");
 		Serial.println("* is a card inserted?");
 		Serial.println("* is your wiring correct?");
