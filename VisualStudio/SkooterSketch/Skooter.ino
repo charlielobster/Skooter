@@ -68,7 +68,7 @@ void Skooter::lookTilt()
 // the function lookScan belongs to the class Skooter
 void Skooter::lookScan()
 {
-	// Skooter goes to its zeroes
+	// panTilt goes to its zeroes
 	panTilt.calibrate();
 	delay(250);
 
