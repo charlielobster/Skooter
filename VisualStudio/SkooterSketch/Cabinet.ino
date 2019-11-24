@@ -117,11 +117,11 @@ void Cabinet::writePosition(int x, int y, int heading, int theta, int phi, int d
 String Cabinet::readLineAtPosition(int position)
 {
 	// re-open the file for reading:
+	String s = "";
 	lidarData = SD.open("readings.txt");
-	if (lidarData && position < lidarData.size()) {
-		lidarData.seek(position);
-		return lidarData.readStringUntil('\n');
-
+	if (lidarData && position < lidarData.size() && lidarData.seek(position)) 
+	{ 
+		s = lidarData.readStringUntil('\n');
 		// close the file:
 		lidarData.close();
 	}
@@ -130,5 +130,5 @@ String Cabinet::readLineAtPosition(int position)
 		// if the file didn't open, print an error:
 		Serial.println("error opening readings.txt");
 	}
-	return "";
+	return s;
 };
