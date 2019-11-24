@@ -4,11 +4,9 @@ void Cabinet::setup() // the function "setup" belongs to the class "Cabinet"
 {
 	// Open serial communications and wait for port to open:
 
-
 	while (!Serial) {
 		; // wait for serial port to connect. Needed for native USB port only
 	}
-
 
 	Serial.print("\nInitializing SD card...");
 
