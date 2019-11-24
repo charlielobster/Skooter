@@ -135,7 +135,6 @@ int Skooter::calibrateTilt()
 	return calibratedTilt;
 }
 
-
 int Skooter::calingPan() 
 {
 	int calibratedPan = -1;
