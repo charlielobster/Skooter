@@ -20,7 +20,7 @@
 class Cabinet // declaration of the class "Cabinet"
 {
 public:
-	const int CHIP_SELECT = 10;
+	static const int CHIP_SELECT = 10;
 
 	File lidarData; 
 	// lidarData: declare an instance of the class "File" 
