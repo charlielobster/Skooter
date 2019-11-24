@@ -8,11 +8,17 @@
 // declare class "Tracks"
 class Tracks
 {
-public:	// accessible outside of the class "Tracks"
+public:	// accessible outside of the class "Tracks"0
 	// class consts: these values are referenced with the syntax Tracks::TYPE_NAME since they are not tied to an instance of Tracks
 	// consts are "read-only" (values cannot be changed), preferred over #define for defining constants in C++ classes
 	const int MOVE_SPEED = 15;
 	const int TURN_SPEED = 15; 
+
+	// default constructor 
+	// : operator - set default values for member variables m_x, m_y, m_heading
+	Tracks() : m_x(0), m_y(0), m_heading(0) {} // empty {} body - in this case, constructor's only job is to assign defaults (ie. no memory allocation)
+	// ~ destructor - also empty {} body (no memory clean-up)
+	~Tracks() {}
 							   
 	// class instance (member) functions - declarations of various functions
 	void attach(int f, int t);
@@ -21,10 +27,15 @@ public:	// accessible outside of the class "Tracks"
 	void goForward();
 	void goBackward();
 	void stop();
+	inline int heading() const { return m_heading; }
+	inline int x() const { return m_x; }
+	inline int y() const { return m_y; }
 
 private: // inaccessible outside of "Tracks"
 	Servo forward; // class Servo, instance "forward" - (note: compile-time error if no #include <Servo.h>)
 	Servo turn; // class Servo, instance "turn"
-	int pos = 0; // data type integer (16 bits, 2 bytes), variable "pos", value "0"
+	int m_heading;
+	int m_x;
+	int m_y;
 };
 #endif

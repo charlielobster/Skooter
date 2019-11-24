@@ -17,6 +17,10 @@ public:  // accessible outside of the class "Skooter"
 	int calTilt();
 	int calingPan();
 	int calPan();
+	void lookPan();
+	void lookTilt();
+	void lookScan();
+
 
 private: // inaccessible outside of the class "Skooter" (these belong privately to the class "Skooter")
 	// lidar, panTilt, tracks, and cabinet are instances of their classes, only accessible within this class, "Skooter" 

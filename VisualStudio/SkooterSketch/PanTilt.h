@@ -11,9 +11,6 @@ public: // accessible outside of the class "PanTilt"
 	// function declarations
 	void attach(int p, int t);
 	void setTiltRange(int minT, int maxT);
-	void lookPan();
-	void lookTilt();
-	void lookScan();
 	int getMinTilt();
 	int getMaxTilt();
 	int getPanAngle();
