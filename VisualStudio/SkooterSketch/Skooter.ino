@@ -48,7 +48,8 @@ void Skooter::lookPan()
 	for (int a = 0; a < 180; a++) { // for loop: for (initialization; condition; increment) {}
 		panTilt.panWrite(a);
 		delay(25);
-	} // pans the lidar 180 degrees, in steeps of 1, and then delays for 25 ms
+		cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+	} 
 }
 
 // the function "lookTilt" belonds to the class "Skooter"
@@ -57,7 +58,7 @@ void Skooter::lookTilt()
 	for (int a = panTilt.minTilt(); a < panTilt.maxTilt(); a++) { // lidar tilts (rotates about its azimuthal angle) from the angle "minTilt" to the angle "maxTilt" in steps of "tiltAngle"
 		panTilt.tiltWrite(a); // calls the function "write" (writes a value of 'tiltAngle' to the servo) to the variable (instance), of type Servo, "tilt"
 		delay(25); // delays for 25 ms
-
+		cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
 	}
 }
 
@@ -71,13 +72,13 @@ void Skooter::lookScan()
 		panTilt.tiltWrite(t);
 		for (int p = 0; p <= 180; p++) { // pans the lidar horizontally (parallel to the plane in which Skooter rests) 180 degrees in steps of "panAngle"
 			panTilt.panWrite(p); // calls the function "write" (writes the value of "panAngle" passed in from the for loop to the step servo) to the variable (instance), of type Servo, "pan"
-			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.measure());
+			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
 		}
 		t++; // increments the "tiltAngle" in steps of "tiltAngle" (seems superfluous, imo)
 		panTilt.tiltWrite(t); // calls the function "write" (writes a value of "tiltAngle" passed in from the for loop to the step servo) to the variable (instance) "tilt"
 		for (int p = 180; p >= 0; p--) { // pans the lidar from 180 degrees to 0 in steps of "panAngle"
 			panTilt.panWrite(p); // calls the function "write" (writes a value of "panAngle" passed in from the for loop to the step servo) to the variable (instance) of "pan"
-			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), t, p, lidar.measure());
+			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
 		}
 	}
 	panTilt.calibrate();
@@ -98,9 +99,9 @@ int Skooter::calTilt()
     panTilt.tiltWrite(tiltAngle);
     delay(15);
 
-    int sum = lidar.measure();
+    int sum = lidar.distance();
     for (int i = 0; i < 9; i++) {
-		sum = sum + lidar.measure();
+		sum = sum + lidar.distance();
     }
     float avgDistance = sum / 10.0;
 
@@ -129,9 +130,9 @@ int Skooter::calingPan()
     panTilt.panWrite(panAngle);
     delay(15);
 
-    int sum = lidar.measure();
+    int sum = lidar.distance();
     for (int i = 0; i < 9; i++) {
-      sum = sum + lidar.measure();
+      sum = sum + lidar.distance();
     }
     float avgDistance = sum / 10.0;
 
