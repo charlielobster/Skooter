@@ -9,7 +9,8 @@ void Skooter::setup(int forwardPin, int turnPin, int panPin, int tiltPin, int mi
 	//lidar.setup();
 }
 
-void Skooter::doStuff() // function "do stuff" belongs to the class "Skooter"
+// function "do stuff" belongs to the class "Skooter"
+void Skooter::doStuff()
 {
 //	cabinet.writePosition(x, y, forwardAngle, panAngle, tiltAngle, d);
 	//panTilt.lookPan();

@@ -1,7 +1,7 @@
 #include "Tracks.h" // gives this implementation file access to the definitions in the header file "Tracks.h"
 
 // the function "attach" belongs to the class "Tracks"
-// the use of the :: operator indicates a class-level declaration (ie. it is "shared" by all the instances of the class)
+// the use of the :: operator indicates a class-level declaration (ie. it is a definition "shared" by all the instances of this class)
 void Tracks::attach(int f, int t)
 {
 	forward.attach(f); // calls the function "attach" (attaches Servo variable to a pin) to the variable, of type Servo, forward

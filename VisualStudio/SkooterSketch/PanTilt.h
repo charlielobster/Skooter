@@ -26,8 +26,7 @@ public: // accessible outside of the class "PanTilt"
 	void setCalibratedTilt(int ct);
 	void calibrate();
 	
-private: 
-	// inaccessible outside of the class "PanTilt"
+private: // inaccessible outside of the class "PanTilt"
 	Servo pan; // declare an instance "pan" of the class "Servo"
 	Servo tilt; // declare an instance "tilt" of the class "Servo"
 	int minTilt; // create a variable "minTilt" of data type "int"

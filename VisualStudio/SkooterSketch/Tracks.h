@@ -9,14 +9,13 @@
 class Tracks
 {
 public:	// accessible outside of the class "Tracks"
-
 	// class consts: these values are referenced with the syntax Tracks::TYPE_NAME since they are not tied to an instance of Tracks
 	// consts are "read-only" (values cannot be changed), preferred over #define for defining constants in C++ classes
 	const int MOVE_SPEED = 15;
 	const int TURN_SPEED = 15; 
 							   
-	// class instance member functions
-	void attach(int f, int t); // declaration of various functions
+	// class instance (member) functions - declarations of various functions
+	void attach(int f, int t);
 	void turnRight();
 	void turnLeft();
 	void goForward();

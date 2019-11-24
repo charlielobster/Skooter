@@ -1,18 +1,22 @@
-#include "PanTilt.h" //gives source file "PanTilt" access to the definitions in the header file "PanTilt.h"
+#include "PanTilt.h" //gives this source file "PanTilt" access to the declarations in the header file "PanTilt.h"
 
-void PanTilt::attach(int p, int t) // the function "attach" belongs to the class (::) "PanTilt"
+// the function "attach" belongs to the class "PanTilt"
+// the use of the :: operator indicates a class-level declaration (ie. it is a definition "shared" by all the instances of this class)
+void PanTilt::attach(int p, int t)
 {
 	pan.attach(p); // calls the function "attach" to the variable (instance), of type Servo, "pan"
 	tilt.attach(t); // calls the the function "attach" to the variable (instance), of type Servo, "tilt"
 }
 
-void PanTilt::setTiltRange(int minT, int maxT) // the function "setTiltRange" belongs to the class (::) "PanTilt"
+// the function "setTiltRange" belongs to the class "PanTilt"
+void PanTilt::setTiltRange(int minT, int maxT)
 {
 	minTilt = minT; // defines variables (provides them with values (min and max)) belonging to class "PanTilt"
 	maxTilt = maxT;
 }
 
-void PanTilt::lookPan() // the function "lookPan" belongs to the class the class (::) "PanTilt"
+// the function "lookPan" belongs to the class the class "PanTilt"
+void PanTilt::lookPan()
 {
 	// sweeps the full 180 degree angle in 1 degree steps
 	pan.write(0); // assigns the function "write" (writes a value (an angle) of '0' to the step servo) to the variable (instance), of type Servo, "pan"
@@ -28,7 +32,8 @@ void PanTilt::lookPan() // the function "lookPan" belongs to the class the class
 
 }
 
-void PanTilt::lookTilt() // the function "lookTilt" belonds to the class (::) "PanTilt"
+// the function "lookTilt" belonds to the class "PanTilt"
+void PanTilt::lookTilt()
 {
 	tilt.write(minTilt); // calls the function "write" (writes a value of "minTilt" to the step servo) to the variable (instance), of type Servo, "tilt"
 	delay(1000); // delays for a second
@@ -42,7 +47,8 @@ void PanTilt::lookTilt() // the function "lookTilt" belonds to the class (::) "P
 	delay(1000);
 }
 
-void PanTilt::lookScan() // the function "lookScan" belongs to the class (::) "PanTilt"
+// the function "lookScan" belongs to the class "PanTilt"
+void PanTilt::lookScan()
 {
 	// scooter first pans to lower left corner
 	pan.write(0); // calls the function "write" (writes a value of '0' to the step servo) to the variable (instance), of type Servo, "pan"
@@ -63,7 +69,6 @@ void PanTilt::lookScan() // the function "lookScan" belongs to the class (::) "P
 
 	}
 
-	//reset to flat, 36 degrees, facing forward
 	tilt.write(minTilt); // calls the function "write" (writes a value of "minTilt" to the step servo) to the variable (instance) of "tilt"
 	pan.write(90); // calls the function "write" (writes a value of '90' to the step servo) to the variable (instance) of "pan"
 }
