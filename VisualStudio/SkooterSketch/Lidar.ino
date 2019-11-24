@@ -9,5 +9,5 @@ void Lidar::setup()
 // define the function named distance declared in the class Lidar
 int Lidar::distance()
 {
-	return eye.distance(); // returns the function distance which is called to the variable (instance) eye
+	return eye.distance(); // returns the value of LIDARLite instance eye's function distance, declared in class LIDARLite
 }

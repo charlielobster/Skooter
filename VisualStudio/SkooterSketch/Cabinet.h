@@ -27,7 +27,7 @@ public:
 	// (a class contains consts, member functions, and member variables)
 	
 	// function declarations : return type void (no objects returned)
-	void setup();	// set up variables using the SD utility library functions:
+	void setup();	// set up variables using the SD utility library functions
 	void writeLidarData(int x, int y, int heading, int theta, int phi, int d); 
 	String readLineAtPosition(int position);
 

@@ -14,7 +14,7 @@ public: // accessible outside of the class Lidar
 	int distance(); // declaration of function distance with return type int
 	
 private: // inaccessible outside of the class Lidar
-	LIDARLite eye; // declare Lidarlite instance eye
+	LIDARLite eye; // declare LIDARLite instance eye
 };
 
 #endif

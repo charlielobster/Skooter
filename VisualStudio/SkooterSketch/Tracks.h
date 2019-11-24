@@ -14,11 +14,10 @@ public:	// accessible outside of the class Tracks
 	const int MOVE_SPEED = 15;
 	const int TURN_SPEED = 15; 
 
-	// default constructor 
+	Tracks() : m_x(0), m_y(0), m_heading(0) {}	// default constructor 
 	// : operator - set default values for member variables m_x, m_y, m_heading
-	Tracks() : m_x(0), m_y(0), m_heading(0) {} // empty {} body - in this case, constructor's only job is to assign defaults (ie. no memory allocation)
-	// ~ destructor - also empty {} body (no memory clean-up)
-	~Tracks() {}
+	// empty {} body - in this case, constructor's only job is to assign defaults (ie. no memory allocation)
+	~Tracks() {}	// ~ destructor - also empty {} body (no memory clean-up)
 							   
 	// class instance (member) functions - declarations of various functions
 	void attach(int f, int t);

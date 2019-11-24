@@ -118,11 +118,9 @@ int Skooter::calibrateTilt()
 		delay(50);
 
 		int sum = lidar.distance();
-
 		for (int i = 0; i < 9; i++) {
 			sum += lidar.distance();
 		}
-
 		float avgDistance = sum / 10.0;
 
 		if (avgDistance < minDistance) 
@@ -140,33 +138,33 @@ int Skooter::calibrateTilt()
 
 int Skooter::calingPan() 
 {
-  int calibratedPan = 0;
-  float minDistance = 9999.9;
+	int calibratedPan = -1;
+	float minDistance = 9999.9;
 
-  panTilt.calibrate();
-  delay(50);
+	panTilt.calibrate();
+	delay(50);
 
-  for (int panAngle = 0; panAngle < 180; panAngle++) {
-    panTilt.panWrite(panAngle);
-    delay(15);
+	for (int a = 0; a <= 180; a++) {
 
-    int sum = lidar.distance();
-    for (int i = 0; i < 9; i++) {
-      sum += lidar.distance();
-    }
-    float avgDistance = sum / 10.0;
+		panTilt.panWrite(a);
+		delay(15);
 
-    if (avgDistance < minDistance) {
-      minDistance = avgDistance;
-      calibratedPan = panAngle;
-    }
+		int sum = lidar.distance();
+		for (int i = 0; i < 9; i++) {
+			sum += lidar.distance();
+		}
+		float avgDistance = sum / 10.0;
 
-  }
+		if (avgDistance < minDistance) 
+		{
+			minDistance = avgDistance;
+			calibratedPan = a;
+		}
+	}
 	
-  panTilt.setCalibratedPan(calibratedPan);
+	panTilt.setCalibratedPan(calibratedPan);
   
-  return calibratedPan;
-
+	return calibratedPan;
 }
 
 int Skooter::calPan() 
