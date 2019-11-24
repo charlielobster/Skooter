@@ -3,7 +3,7 @@
 // https://en.wikipedia.org/wiki/Include_guard
 #define _CABINET_
 
-#include <SPI.h> // include the "SPI" and "SD" header files, making their declarations, types, and static variables accesible to this header file, "Cabinet.h"
+#include <SPI.h> // include the SPI and SD header files, making their declarations, types, and static variables accesible to this header file, "Cabinet.h"
 #include <SD.h>
 
 // change this to match your SD shield or module;
@@ -17,13 +17,13 @@
 // ** CLK - pin 13 on Arduino Uno/Duemilanove/Diecimila
 // ** CS - pin 10
 
-class Cabinet // declaration of the class "Cabinet"
+class Cabinet // declaration of the class Cabinet
 {
 public:
 	const int CHIP_SELECT = 10; 
 	
 	File lidarData; 
-	// lidarData: declare an instance of the class "File" 
+	// lidarData: declare an instance of the class File 
 	// (a class contains consts, member functions, and member variables)
 	
 	// function declarations : return type void (no objects returned)

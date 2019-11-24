@@ -5,16 +5,16 @@
 
 #include <LIDARLite.h> 
 // include Lidarlite header files, 
-// (thereby making its declarations, types, enums, and static variables available to whatever is being declared in this header file, "Lidar.h")
+// (thereby making its declarations, types, enums, and static variables available to whatever is being declared in this header file, Lidar.h)
 
-class Lidar // declare the class "Lidar"
+class Lidar // declare the class Lidar
 {
-public: // accessible outside of the class "Lidar"
-	void setup(); // declaration of function "setup"
-	int distance(); // declaration of function "distance" with return type int
+public: // accessible outside of the class Lidar
+	void setup(); // declaration of function setup
+	int distance(); // declaration of function distance with return type int
 	
-private: // inaccessible outside of the class "Lidar"
-	LIDARLite eye; // declare Lidarlite instance "eye"
+private: // inaccessible outside of the class Lidar
+	LIDARLite eye; // declare Lidarlite instance eye
 };
 
 #endif

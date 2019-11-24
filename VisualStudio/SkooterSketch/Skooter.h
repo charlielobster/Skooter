@@ -11,18 +11,18 @@
 
 class Skooter
 {
-public:  // accessible outside of the class "Skooter"
+public:  // accessible outside of the class Skooter
 	void setup(int forwardPin, int turnPin, int panPin, int tiltPin, int minTilt, int maxTilt); 
 	void doStuff(); 
-	int calTilt();
+	int calibrateTilt();
 	int calingPan();
 	int calPan();
 	void lookPan();
 	void lookTilt();
 	void lookScan();
 
-private: // inaccessible outside of the class "Skooter" (these belong privately to instances of this class, "Skooter")
-	// lidar, panTilt, tracks, and cabinet are instances of their classes, only accessible within this class, "Skooter" 
+private: // inaccessible outside of the class Skooter (these belong privately to instances of this class, called Skooter)
+	// lidar, panTilt, tracks, and cabinet are instances of their classes, but these instances are only accessible within this class, called Skooter 
 	Lidar lidar;
 	PanTilt panTilt;
 	Tracks tracks;

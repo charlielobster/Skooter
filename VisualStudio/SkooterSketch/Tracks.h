@@ -5,12 +5,12 @@
 
 #include <Servo.h> // make the Servo header file declarations available to this class and ultimately, to the board
 
-// declare class "Tracks"
+// declare class Tracks
 class Tracks
 {
-public:	// accessible outside of the class "Tracks"0
+public:	// accessible outside of the class Tracks
 	// class consts: these values are referenced with the syntax Tracks::TYPE_NAME since they are not tied to an instance of Tracks
-	// consts are "read-only" (values cannot be changed), preferred over #define for defining constants in C++ classes
+	// consts are read-only (values cannot be changed), preferred over #define for defining constants in C++ classes
 	const int MOVE_SPEED = 15;
 	const int TURN_SPEED = 15; 
 
@@ -32,9 +32,9 @@ public:	// accessible outside of the class "Tracks"0
 	inline int x() { return m_x; }
 	inline int y() { return m_y; }
 
-private: // inaccessible outside of "Tracks"
-	Servo forward; // class Servo, instance "forward" - (note: compile-time error if no #include <Servo.h>)
-	Servo turn; // class Servo, instance "turn"
+private: // inaccessible outside of Tracks
+	Servo forward; // class Servo, instance forward - (note: compile-time error if no #include <Servo.h>)
+	Servo turn; // class Servo, instance turn
 	int m_heading;
 	int m_x;
 	int m_y;

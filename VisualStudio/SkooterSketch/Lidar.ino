@@ -1,10 +1,13 @@
-﻿#include "Lidar.h" // allows the source file "Lidar" access to the library "Lidar.h"
+﻿#include "Lidar.h" // include declarations etc from "Lidar.h"
 
-void Lidar::setup() { // the function "setup" belongs to the class "Lidar"
+// define the function named setup declared in the class Lidar
+void Lidar::setup()
+{ 
 	eye.begin(0, true); 
 }
 
-int Lidar::distance() // the function "measure" belongs to the class (::) "Lidar"
+// define the function named distance declared in the class Lidar
+int Lidar::distance()
 {
-	return eye.distance(); // returns the function "distance" which is called to the variable (instance) "eye"
+	return eye.distance(); // returns the function distance which is called to the variable (instance) eye
 }

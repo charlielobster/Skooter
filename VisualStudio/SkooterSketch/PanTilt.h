@@ -5,9 +5,9 @@
 
 #include <Servo.h> // include the declarations made in the Servo.h header file
 
-class PanTilt // declare class "PanTilt"
+class PanTilt // declare class PanTilt
 {
-public: // accessible outside of the class "PanTilt"
+public: // accessible outside of the class PanTilt
 	// function declarations
 	void attach(int p, int t);
 	void setTiltRange(int minT, int maxT);
@@ -23,11 +23,11 @@ public: // accessible outside of the class "PanTilt"
 	void setCalibratedTilt(int ct);
 	void calibrate();
 	
-private: // inaccessible outside of the class "PanTilt"
-	Servo m_pan; // declare an instance "m_pan" of the class "Servo"
-	Servo m_tilt; // declare an instance "m_tilt" of the class "Servo"
-	int m_minTilt; // declare a variable "m_minTilt" of data type int
-	int m_maxTilt; // declare a variable "m_maxTilt" of data type int
+private: // inaccessible outside of the class PanTilt
+	Servo m_pan; // declare an instance m_pan of the class Servo
+	Servo m_tilt; // declare an instance m_tilt of the class Servo
+	int m_minTilt; // declare a variable m_minTilt of data type int
+	int m_maxTilt; // declare a variable m_maxTilt of data type int
 	int m_panAngle; 
 	int m_tiltAngle;
 	int m_calibratedTilt;
