@@ -119,8 +119,11 @@ String Cabinet::readLineAtPosition(int position)
 	// re-open the file for reading:
 	String s = "";
 	lidarData = SD.open("readings.txt");
+	// if the lidarData instance is returning something not 0 and position is inside the file 
+	// and we successfully went to it with a call to seek() - whew!
 	if (lidarData && position < lidarData.size() && lidarData.seek(position)) 
 	{ 
+		// read the string there...
 		s = lidarData.readStringUntil('\n');
 		// close the file:
 		lidarData.close();
