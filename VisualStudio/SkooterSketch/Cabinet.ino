@@ -76,4 +76,4 @@ String Cabinet::readLineAtPosition(int position)
 	}
 	// whether we found something or not, return a String
 	return s;
-};
+}
