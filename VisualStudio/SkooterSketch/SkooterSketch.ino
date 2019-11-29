@@ -1,3 +1,8 @@
+/*
+ Name:		SkooterSketch.ino
+ Created:	11/20/2019 1:53:19 PM
+ Author:	skoob
+*/
 #include "Skooter.h"
 
 Skooter skooter;
