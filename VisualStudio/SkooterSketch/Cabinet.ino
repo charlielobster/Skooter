@@ -46,6 +46,13 @@ void Cabinet::writeLidarData(int x, int y, int heading, int theta, int phi, int 
 	}
 }
 
+String Cabinet::readNextLine()
+{
+	lidarData = SD.open("readings.txt");
+	//lidarData.fileposition...
+	return "";
+}
+
 String Cabinet::readLineAtPosition(int position)
 {
 	String s = "";

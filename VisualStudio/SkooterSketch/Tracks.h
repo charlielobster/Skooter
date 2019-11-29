@@ -6,6 +6,9 @@
 #include <Servo.h> // make the Servo header file declarations available to this class and ultimately, to the board
 
 // declare class Tracks
+// Tracks uses the sabertooth 2x5 motor driver with the following configuration:
+// pins 1 and 3 are ON, 2, 4, 5, 6 are OFF
+// FLIP + and - connected to arduino Vin and Gnd
 class Tracks
 {
 public:	// accessible outside of the class Tracks
@@ -13,6 +16,8 @@ public:	// accessible outside of the class Tracks
 	// consts are read-only (values cannot be changed), preferred over #define for defining constants in C++ classes
 	const int MOVE_SPEED = 15;
 	const int TURN_SPEED = 15; 
+	const float MOVE_TIME = 100;
+	const float TURN_TIME = 100;
 
 	Tracks() : m_x(0), m_y(0), m_heading(0) {}	// default constructor 
 	// : operator - set default values for member variables m_x, m_y, m_heading
@@ -20,20 +25,22 @@ public:	// accessible outside of the class Tracks
 	~Tracks() {}	// ~ destructor - also empty {} body (no memory clean-up)
 							   
 	// class instance (member) functions - declarations of various functions
-	void attach(int f, int t);
-	void turnRight();
-	void turnLeft();
+	void attach(int forwardPin, int turnPin);
 	void turnToAngle(int angle);
-	void goForward();
-	void goBackward();
+	void goForward(int units);
+	void goBackward(int units);
 	void stop();
 	inline int heading() { return m_heading; }
 	inline int x() { return m_x; }
 	inline int y() { return m_y; }
 
 private: // inaccessible outside of Tracks
-	Servo forward; // class Servo, instance forward - (note: compile-time error if no #include <Servo.h>)
-	Servo turn; // class Servo, instance turn
+	void turnRight();
+	void forward();
+	void backward();
+	void turnLeft();
+	Servo left; // class Servo, instance forward - (note: compile-time error if no #include <Servo.h>)
+	Servo right; // class Servo, instance turn
 	int m_heading;
 	int m_x;
 	int m_y;

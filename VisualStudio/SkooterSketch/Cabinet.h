@@ -30,6 +30,7 @@ public:
 	void setup();	// set up variables using the SD utility library functions
 	void writeLidarData(int x, int y, int heading, int theta, int phi, int d); 
 	String readLineAtPosition(int position);
+	String readNextLine();
 
 private:
 	Sd2Card card;
