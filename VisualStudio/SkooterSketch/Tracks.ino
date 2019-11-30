@@ -1,60 +1,46 @@
-#include "Tracks.h" // gives this implementation file access to the definitions in the header file "Tracks.h"
-
-// the function attach belongs to the class Tracks
-// the use of the :: operator indicates a class-level declaration (ie. it is a definition shared by all the instances of this class)
+#include "Tracks.h" 
 
 void Tracks::attach(int forwardPin, int turnPin)
 {
-	left.attach(turnPin, 1000, 2000); // calls the function attach (attaches Servo variable to a pin) to the variable, of type Servo, forward
-	right.attach(forwardPin, 1000, 2000); // calls the function attach to the variable (instance), of type Servo, turn
+	left.attach(turnPin, 1000, 2000); 
+	right.attach(forwardPin, 1000, 2000); 
 }
 
-// the function turnRight belongs to the class Tracks
 void Tracks::turnRight()
 {
-	right.write(90 - TURN_SPEED); // calls the function write to the variable (instance), of type Servo, turn
-	left.write(90 + TURN_SPEED); // calls the function write to the variable (instance), of type Servo, turn
+	right.write(90 - TURN_SPEED); 
+	left.write(90 + TURN_SPEED); 
 }
 
-// the function turnLeft belongs to the class Tracks
 void Tracks::turnLeft()
 {
-	right.write(90 + TURN_SPEED); // call the function write (writes a value (speed) to the continuoius rotation servo) to the variable (instance), of type Servo, turn; argument of write is a speed
-	left.write(90 - TURN_SPEED); // call the function write (writes a value (speed) to the continuoius rotation servo) to the variable (instance), of type Servo, turn; argument of write is a speed
+	right.write(90 + TURN_SPEED); 
+	left.write(90 - TURN_SPEED); 
 }
 
-// the function goForward belongs to the class Tracks
 void Tracks::forward()
 {
-	left.write(90 - MOVE_SPEED); // calls the function write to the variable (instance), of type Servo, forward
-	right.write(90 - MOVE_SPEED); // calls the function write to the variable (instance), of type Servo, forward
+	left.write(90 - MOVE_SPEED);
+	right.write(90 - MOVE_SPEED); 
 }
 
-// the function goBackward belongs to the class Tracks
 void Tracks::backward()
 {
-	left.write(90 + MOVE_SPEED); // calls the function write to the variable (instance), of type Servo, forward
-	right.write(90 + MOVE_SPEED); // calls the function write to the variable (instance), of type Servo, forward
+	left.write(90 + MOVE_SPEED);
+	right.write(90 + MOVE_SPEED);
 }
 
-// the function stop belongs to the class Tracks
 void Tracks::stop()
 {
-	left.write(90); // calls the function write to the variable (instance), of type Servo, forward
-	right.write(90); // calls the function write to the variable (instance, of type Servo, turn
+	left.write(90);
+	right.write(90);
 }
 
-//turnToAngle, goForward, goBackward use the above to control Skooter
-
-// 90 means turn Skooter 90 degrees to the right, -90 means turn Skooter 90 degrees to the left
+// 90 means turn Skooter 90 degrees to the left, -90 means turn Skooter 90 degrees to the right
 void Tracks::turnToAngle(int angle)
 {
-	if (angle < 0) {
-		clockwiseTurn(-angle);
-	}
-	else {
-		counterClockwiseTurn(angle);
-	}
+	// trinary operator a ? b : c is equivalent to if (a) b; else c;
+	(angle < 0 ? clockwiseTurn(-angle) : counterClockwiseTurn(angle) );
 }
 
 void Tracks::clockwiseTurn(int angle)
@@ -67,21 +53,21 @@ void Tracks::clockwiseTurn(int angle)
 	right.write(90);
 }
 
-void Tracks::clockwiseCircle()
-{
-	right.write(40);
-	left.write(130);
-	delay(10750);
-	left.write(90);
-	right.write(90);
-}
-
 void Tracks::counterClockwiseTurn(int angle)
 {
 	int d = floor(angle * 11000.0 / 360.0);
 	right.write(130);
 	left.write(40);
 	delay(d);
+	left.write(90);
+	right.write(90);
+}
+
+void Tracks::clockwiseCircle()
+{
+	right.write(40);
+	left.write(130);
+	delay(10750);
 	left.write(90);
 	right.write(90);
 }

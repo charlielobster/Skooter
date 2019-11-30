@@ -119,6 +119,7 @@
   <ItemGroup>
     <ClInclude Include="Cabinet.h" />
     <ClInclude Include="Lidar.h" />
+    <ClInclude Include="LidarData.h" />
     <ClInclude Include="PanTilt.h" />
     <ClInclude Include="Skooter.h" />
     <ClInclude Include="Tracks.h" />

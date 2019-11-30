@@ -1,7 +1,7 @@
-#ifndef _PANTILT_ 
+#ifndef _PANTILT_H_
 // prevent duplicate declaration of types, enums and static variables if this header file is included more than once
 // https://en.wikipedia.org/wiki/Include_guard
-#define _PANTILT_
+#define _PANTILT_H_
 
 #include <Servo.h> // include the declarations made in the Servo.h header file
 
@@ -24,7 +24,7 @@ public: // accessible outside of the class PanTilt
 	void calibrate();
 	
 private: // inaccessible outside of the class PanTilt
-	Servo m_pan; // declare an instance m_pan of the class Servo
+	Servo m_pan; // declare an instance m_pan of the class Servo (note: compile-time error if no #include <Servo.h>)
 	Servo m_tilt; // declare an instance m_tilt of the class Servo
 	int m_minTilt; // declare a variable m_minTilt of data type int
 	int m_maxTilt; // declare a variable m_maxTilt of data type int

@@ -1,7 +1,7 @@
-#ifndef _SKOOTER_ 
+#ifndef _SKOOTER_H_
 // prevent duplicate declaration of types, enums and static variables if this header file is included more than once
 // https://en.wikipedia.org/wiki/Include_guard
-#define _SKOOTER_
+#define _SKOOTER_H_
 
 // preprocessor directives: make all the declarations, types, static variables, etc in these header files available to this header file
 #include "Lidar.h" 
@@ -22,7 +22,7 @@ public:  // accessible outside of the class Skooter
 	void lookScan();
 
 private: // inaccessible outside of the class Skooter (these belong privately to instances of this class, called Skooter)
-	// lidar, panTilt, tracks, and cabinet are instances of their classes, but these instances are only accessible within this class, called Skooter 
+	// lidar, panTilt, tracks, and cabinet are instances of their classes, but these particular instances are only accessible within this class, Skooter 
 	Lidar lidar;
 	PanTilt panTilt;
 	Tracks tracks;

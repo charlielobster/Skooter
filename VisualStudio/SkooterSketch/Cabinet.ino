@@ -18,6 +18,11 @@ void Cabinet::setup() // the function setup belongs to the class Cabinet
 	root.openRoot(volume);
 }
 
+void Cabinet::writeLidarData(const LidarData &ld)
+{
+	writeLidarData(ld.x, ld.y, ld.heading, ld.theta, ld.phi, ld.d);
+}
+
 void Cabinet::writeLidarData(int x, int y, int heading, int theta, int phi, int d)
 {
 	char data[100]; // buffer for a line in the file

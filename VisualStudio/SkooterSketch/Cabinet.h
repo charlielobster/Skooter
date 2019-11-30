@@ -1,10 +1,12 @@
-#ifndef _CABINET_ 
+#ifndef _CABINET_H_
 // prevent duplicate declaration of types, enums and static variables if this header file is included more than once
 // https://en.wikipedia.org/wiki/Include_guard
-#define _CABINET_
+#define _CABINET_H_
 
 #include <SPI.h> // include the SPI and SD header files, making their declarations, types, and static variables accesible to this header file, "Cabinet.h"
 #include <SD.h>
+
+#include "LidarData.h"
 
 // change this to match your SD shield or module;
 // Arduino Ethernet shield: pin 4
@@ -29,6 +31,7 @@ public:
 	// function declarations : return type void (no objects returned)
 	void setup();	// set up variables using the SD utility library functions
 	void writeLidarData(int x, int y, int heading, int theta, int phi, int d); 
+	void writeLidarData(const LidarData &ld); // write a LidarData
 	String readLineAtPosition(int position);
 	String readNextLine();
 
