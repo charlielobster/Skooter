@@ -6,16 +6,16 @@
 #include <Servo.h> // make the Servo header file declarations available to this class and ultimately, to the board
 
 // declare class Tracks
-// Tracks uses the sabertooth 2x5 motor driver with the following configuration:
-// pins 1 and 3 are ON, 2, 4, 5, 6 are OFF
+// Tracks uses the sabertooth 2x5 rc motor driver with the following configuration:
+// pin 3 is ON, 1, 2, 4, 5, 6 are OFF
 // FLIP + and - connected to arduino Vin and Gnd
 class Tracks
 {
 public:	// accessible outside of the class Tracks
 	// class consts: these values are referenced with the syntax Tracks::TYPE_NAME since they are not tied to an instance of Tracks
 	// consts are read-only (values cannot be changed), preferred over #define for defining constants in C++ classes
-	const int MOVE_SPEED = 15;
-	const int TURN_SPEED = 15; 
+	const int MOVE_SPEED = 20;
+	const int TURN_SPEED = 20; 
 	const float MOVE_TIME = 100;
 	const float TURN_TIME = 100;
 
@@ -27,6 +27,10 @@ public:	// accessible outside of the class Tracks
 	// class instance (member) functions - declarations of various functions
 	void attach(int forwardPin, int turnPin);
 	void turnToAngle(int angle);
+	void clockwiseTurn(int angle);
+	void clockwiseCircle();
+	void counterClockwiseTurn(int angle);
+	void counterClockwiseCircle();
 	void goForward(int units);
 	void goBackward(int units);
 	void stop();

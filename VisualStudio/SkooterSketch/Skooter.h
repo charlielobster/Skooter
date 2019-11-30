@@ -27,6 +27,8 @@ private: // inaccessible outside of the class Skooter (these belong privately to
 	PanTilt panTilt;
 	Tracks tracks;
 	Cabinet cabinet;
+
+	bool doSomething = true;
 };
 
 #endif

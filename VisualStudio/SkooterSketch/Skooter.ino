@@ -13,8 +13,14 @@ void Skooter::setup(int forwardPin, int turnPin, int panPin, int tiltPin, int mi
 // function do stuff belongs to the class Skooter
 void Skooter::doStuff()
 {
-	tracks.goForward(5);
-	delay(5000);
+	if (doSomething) {
+		Serial.println("turning clockwise...");
+		tracks.clockwiseTurn(90);
+		delay(3000);
+		Serial.println("turning counter-clockwise...");
+		tracks.counterClockwiseTurn(90);
+		doSomething = false;
+	}
 }
 
 // the function lookPan belongs to the class Skooter
