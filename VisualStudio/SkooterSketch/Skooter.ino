@@ -30,7 +30,8 @@ void Skooter::lookPan()
 	for (int a = 0; a <= 180; a++) {
 		panTilt.panWrite(a);
 		delay(25);
-		cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+		LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+		cabinet.writeLine(ld.toString());
 	} 
 }
 
@@ -42,7 +43,8 @@ void Skooter::lookTilt()
 		// call the PanTilt instance panTilt's function tiltWrite, with the value of a 
 		panTilt.tiltWrite(a);
 		delay(25); // delays for 25 ms
-		cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+		LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+		cabinet.writeLine(ld.toString());
 	}
 }
 
@@ -64,7 +66,8 @@ void Skooter::lookScan()
 			// call the PanTilt instance panTilt's function panWrite, with the value of p
 			panTilt.panWrite(p);
 			// write the lidar distance, tracks, and panTilt related data to the cabinet...
-			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+			LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+			cabinet.writeLine(ld.toString());
 		}
 
 		t++; // increment t again
@@ -78,7 +81,8 @@ void Skooter::lookScan()
 			// call PanTilt instance panTilt's function panWrite, with the value of p 
 			panTilt.panWrite(p);
 			// write the lidar distance, tracks, and panTilt related data to the cabinet...
-			cabinet.writeLidarData(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+			LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+			cabinet.writeLine(ld.toString());
 		}
 	}
 	panTilt.calibrate();

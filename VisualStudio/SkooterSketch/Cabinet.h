@@ -17,28 +17,24 @@
 // ** MOSI - pin 11 on Arduino Uno/Duemilanove/Diecimila
 // ** MISO - pin 12 on Arduino Uno/Duemilanove/Diecimila
 // ** CLK - pin 13 on Arduino Uno/Duemilanove/Diecimila
-// ** CS - pin 10
+// ** CS - pin CHIP_SELECT
 
 class Cabinet // declaration of the class Cabinet
 {
 public:
-	const int CHIP_SELECT = 10; 
+	static const int CHIP_SELECT = 10; 
 	
-	File lidarData; 
 	// lidarData: declare an instance of the class File 
 	// (a class contains consts, member functions, and member variables)
 	
 	// function declarations : return type void (no objects returned)
-	void setup();	// set up variables using the SD utility library functions
-	void writeLidarData(int x, int y, int heading, int theta, int phi, int d); 
-	void writeLidarData(const LidarData &ld); // write a LidarData
-	String readLineAtPosition(int position);
-	String readNextLine();
+	void setup();	// SD.begin(CHIP_SELECT)
+	void writeLine(String s);
+	void writeFileToSerial();
 
 private:
-	Sd2Card card;
-	SdVolume volume;
-	SdFile root;
+	File m_dataFile;
+
 };
 
 #endif
