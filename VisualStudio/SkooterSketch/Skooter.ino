@@ -3,22 +3,42 @@
 // function setup (initializes variables, pin modes, start using libraries, etc.) belongs to class Skooter  
 void Skooter::setup(int forwardPin, int turnPin, int panPin, int tiltPin, int minTilt, int maxTilt)
 {
-//	cabinet.setup(); // calls the function setup to the variable (instance), cabinet, which belongs to the class Cabinet, which belongs, privately, to the class Skooter
+	cabinet.setup(); // calls the function setup to the variable (instance), cabinet, which belongs to the class Cabinet, which belongs, privately, to the class Skooter
 	tracks.attach(forwardPin, turnPin);
-	//panTilt.attach(panPin, tiltPin);
-	//panTilt.setTiltRange(minTilt, maxTilt);
-	//lidar.setup();
+	panTilt.attach(panPin, tiltPin);
+	panTilt.setTiltRange(minTilt, maxTilt);
+	lidar.setup();
 }
 
 // function do stuff belongs to the class Skooter
 void Skooter::doStuff()
 {
 	if (doSomething) {
-		Serial.println("turning clockwise...");
-		tracks.clockwiseTurn(90);
-		delay(3000);
-		Serial.println("turning counter-clockwise...");
-		tracks.counterClockwiseTurn(90);
+
+		LidarData ld;
+		ld.x = 932;
+		ld.y = 93;
+		ld.heading = 910;
+		ld.theta = 95;
+		ld.phi = 990;
+		ld.d = 90;
+
+		cabinet.writeLine(ld.toString());
+
+		Serial.println("wrote this lidarData to cabinet");
+		Serial.println(ld.toString());
+
+		Serial.println("writing contents of cabinet file to serial...");
+		String s;
+
+		cabinet.writeFileToSerial();
+
+		//Serial.println("turning clockwise...");
+		//tracks.clockwiseTurn(90);
+		//delay(3000);
+		//Serial.println("turning counter-clockwise...");
+		//tracks.counterClockwiseTurn(90);
+
 		doSomething = false;
 	}
 }
