@@ -1,9 +1,9 @@
 #include "Tracks.h" 
 
-void Tracks::attach(int forwardPin, int turnPin)
+void Tracks::setup()
 {
-	left.attach(turnPin, 1000, 2000); 
-	right.attach(forwardPin, 1000, 2000); 
+	left.attach(TURN_PIN, 1000, 2000); 
+	right.attach(FORWARD_PIN, 1000, 2000); 
 }
 
 void Tracks::turnRight()

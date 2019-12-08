@@ -13,20 +13,18 @@ class Tracks
 public:	// accessible outside of the class Tracks
 	// class consts: these values are referenced with the syntax Tracks::TYPE_NAME since they are not tied to an instance of Tracks
 	// consts are read-only (values cannot be changed), preferred over #define for defining constants in C++ classes
-	const int MOVE_SPEED = 20;
-	const int TURN_SPEED = 20; 
-	const float MOVE_TIME = 100;	// unused
-	const float TURN_TIME = 100;
+	static const int MOVE_SPEED = 20;
+	static const int TURN_SPEED = 20; 
+	static const int MOVE_TIME = 100;	// unused
+	static const int TURN_TIME = 100;
+	static const int FORWARD_PIN = 5;
+	static const int TURN_PIN = 4;
 
-	Tracks() : m_x(0), m_y(0), m_heading(0) {}	// default constructor 
-	// : operator - set default values for member variables m_x, m_y, m_heading
-	// empty {} body - in this case, constructor's only job is to assign defaults (ie. no memory allocation)
-	~Tracks() {}	// ~ destructor - also empty {} body (no memory clean-up)
-							   
-	// class instance (member) functions - declarations of various functions
-	void attach(int forwardPin, int turnPin);
+	Tracks() : m_x(0), m_y(0), m_heading(0) {}
+	~Tracks() {}
 
-	// these methods require some knowledge of the battery-level to work consistently
+
+	void setup();
 	void turnToAngle(int angle);
 	void clockwiseTurn(int angle);
 	void clockwiseCircle();

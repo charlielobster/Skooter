@@ -1,13 +1,12 @@
-#include "Skooter.h" // gives this source file access to the declared types, enums, and static variables in "Skooter.h"
+#include "Skooter.h" 
 
-// function setup (initializes variables, pin modes, start using libraries, etc.) belongs to class Skooter  
-void Skooter::setup(int forwardPin, int turnPin, int panPin, int tiltPin, int minTilt, int maxTilt)
+void Skooter::setup()
 {
-	cabinet.setup(); // calls the function setup to the variable (instance), cabinet, which belongs to the class Cabinet, which belongs, privately, to the class Skooter
-	tracks.attach(forwardPin, turnPin);
-	panTilt.attach(panPin, tiltPin);
-	panTilt.setTiltRange(minTilt, maxTilt);
-	lidar.setup();
+	cabinet.setup(); 
+	tracks.setup();
+	//panTilt.setup();
+	noiseMaker.setup();
+	//lidar.setup();
 }
 
 // function do stuff belongs to the class Skooter
@@ -15,29 +14,29 @@ void Skooter::doStuff()
 {
 	if (doSomething) {
 
-		LidarData ld;
-		ld.x = 932;
-		ld.y = 93;
-		ld.heading = 910;
-		ld.theta = 95;
-		ld.phi = 990;
-		ld.d = 90;
+		//LidarData ld;
+		//ld.x = 1032;
+		//ld.y = 103;
+		//ld.heading = 1010;
+		//ld.theta = 105;
+		//ld.phi = 10100;
+		//ld.d = 100;
 
-		cabinet.writeLine(ld.toString());
+		//cabinet.writeLine(ld.toString());
 
-		Serial.println("wrote this lidarData to cabinet");
-		Serial.println(ld.toString());
+		//Serial.println("wrote this lidarData to cabinet");
+		//Serial.println(ld.toString());
 
-		Serial.println("writing contents of cabinet file to serial...");
-		String s;
+		//Serial.println("writing contents of cabinet file to serial...");
+		//String s;
 
-		cabinet.writeFileToSerial();
+		//cabinet.writeFileToSerial();
 
-		//Serial.println("turning clockwise...");
-		//tracks.clockwiseTurn(90);
-		//delay(3000);
-		//Serial.println("turning counter-clockwise...");
-		//tracks.counterClockwiseTurn(90);
+		Serial.println("turning clockwise...");
+		tracks.clockwiseTurn(90);
+		delay(3000);
+		Serial.println("turning counter-clockwise...");
+		tracks.counterClockwiseTurn(90);
 
 		doSomething = false;
 	}
@@ -59,7 +58,7 @@ void Skooter::lookPan()
 void Skooter::lookTilt()
 {
 	// lidar tilts (rotates about its azimuthal angle) from the angle minTilt to the angle maxTilt in steps of 1
-	for (int a = panTilt.minTilt(); a <= panTilt.maxTilt(); a++) {
+	for (int a = PanTilt::MIN_TILT; a <= PanTilt::MAX_TILT; a++) {
 		// call the PanTilt instance panTilt's function tiltWrite, with the value of a 
 		panTilt.tiltWrite(a);
 		delay(25); // delays for 25 ms
@@ -75,8 +74,8 @@ void Skooter::lookScan()
 	panTilt.calibrate();
 	delay(250);
 
-	for (int t = panTilt.minTilt(); t <= panTilt.maxTilt(); t++) {
-		
+	for (int t = PanTilt::MIN_TILT; t <= PanTilt::MAX_TILT; t++) {
+
 		panTilt.tiltWrite(t);
 
 		// pan the lidar along a plane which deviates from a plane parallel with the floor by the angle (tiltAngle - calibratedAngle)
@@ -117,7 +116,7 @@ int Skooter::calibrateTilt()
 	panTilt.calibrate();
 	delay(250);
 
-	for (int tiltAngle = panTilt.minTilt(); tiltAngle <= panTilt.maxTilt(); tiltAngle++) {
+	for (int tiltAngle = PanTilt::MIN_TILT; tiltAngle <= PanTilt::MAX_TILT; tiltAngle++) {
 
 		panTilt.tiltWrite(tiltAngle);
 		delay(50);
