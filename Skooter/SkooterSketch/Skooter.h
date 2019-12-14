@@ -10,15 +10,16 @@
 class Skooter
 {
 public:  
-	void setup(); 
-	void doStuff(); 
-	int calibrateTilt();
-	int calingPan();
-	int calPan();
-	void lookPan();
-	void lookTilt();
-	void lookScan();
-
+	void setup();
+	void loop(); 
+	//int calibrateTilt();
+	//int calingPan();
+	//int calPan();
+	void pan(int increment);
+	void tilt(int increment);
+	void scan(int increment);
+ //   void checkBuffer();
+    
 private: 
 	Lidar lidar;
 	PanTilt panTilt;
@@ -26,6 +27,7 @@ private:
 	Cabinet cabinet;
 	NoiseMaker noiseMaker;
 
+	long i = 0;
 	bool doSomething = true;
 };
 

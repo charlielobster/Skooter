@@ -1,9 +1,13 @@
 #include "Tracks.h" 
 
+Tracks::Tracks() : m_x(0), m_y(0), m_heading(0)
+{
+}
+
 void Tracks::setup()
 {
-	left.attach(TURN_PIN, 1000, 2000); 
-	right.attach(FORWARD_PIN, 1000, 2000); 
+	left.attach(TURN_PIN, 1000, 2000);
+	right.attach(FORWARD_PIN, 1000, 2000);
 }
 
 void Tracks::turnRight()
@@ -36,10 +40,10 @@ void Tracks::stop()
 	right.write(90);
 }
 
-// 90 means turn Skooter 90 degrees to the left, -90 means turn Skooter 90 degrees to the right
+// 90 means turn Skooter 90 degrees to the left, 
+// -90 means turn Skooter 90 degrees to the right
 void Tracks::turnToAngle(int angle)
 {
-	// trinary operator a ? b : c is equivalent to if (a) b; else c;
 	(angle < 0 ? clockwiseTurn(-angle) : counterClockwiseTurn(angle) );
 }
 

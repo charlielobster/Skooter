@@ -1,5 +1,5 @@
 #include <SoftwareSerial.h> 
-SoftwareSerial mySerial(2, 3);  //RX,TX 
+SoftwareSerial mySerial(3, 2);  //RX,TX 
  
 //  Arduino pin 2 (RX) to ESP8266 TX 
 //  Arduino pin 3 to voltage divider then to ESP8266 RX 

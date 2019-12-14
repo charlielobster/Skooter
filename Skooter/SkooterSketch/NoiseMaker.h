@@ -5,7 +5,6 @@ class NoiseMaker
 {
 public:
 	static const int BUZZER_PIN = 8; 
-	long i = 0;
 
 	void setup() 
 	{

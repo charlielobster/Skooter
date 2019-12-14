@@ -6,8 +6,8 @@
 class PanTilt 
 {
 public: 
-	static const int PAN_PIN = 9;
-	static const int TILT_PIN = 6;
+	static const int PAN_PIN = 6;
+	static const int TILT_PIN = 9;
 	static const int MIN_TILT = 28;
 	static const int MAX_TILT = 118;
 
