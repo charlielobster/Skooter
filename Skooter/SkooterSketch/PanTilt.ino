@@ -4,6 +4,8 @@ void PanTilt::setup()
 {
 	m_pan.attach(PAN_PIN);
 	m_tilt.attach(TILT_PIN);	
+    panWrite(LEVEL_PAN);
+    tiltWrite(LEVEL_TILT);
 }
 
 void PanTilt::panWrite(int angle) 

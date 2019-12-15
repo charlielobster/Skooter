@@ -4,7 +4,7 @@ Skooter skooter;
 
 void setup() 
 {
-	Serial.begin(74880);
+	Serial.begin(38400);
 	skooter.setup();
 }
 

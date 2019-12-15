@@ -9,7 +9,9 @@ public:
 	static const int PAN_PIN = 6;
 	static const int TILT_PIN = 9;
 	static const int MIN_TILT = 28;
-	static const int MAX_TILT = 118;
+	static const int MAX_TILT = 115;
+    static const int LEVEL_TILT = 35;
+    static const int LEVEL_PAN = 90;
 
 	void setup();
 	inline int panAngle() { return m_panAngle; }

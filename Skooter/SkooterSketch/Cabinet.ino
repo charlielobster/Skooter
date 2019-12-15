@@ -1,6 +1,11 @@
 #include "Cabinet.h" 
 
-Cabinet::Cabinet() : m_softwareSerial(ESP_TX_PIN, ESP_RX_PIN), m_fileCount(0) {}
+Cabinet::Cabinet() : 
+    m_softwareSerial(ESP_TX_PIN, ESP_RX_PIN), 
+    m_fileCount(0), 
+    m_currentFileName(""),
+    m_requestedFileName(""),
+    m_state(SerialState::NO_ACTIVITY) {}
 
 void Cabinet::setup() 
 {
@@ -8,51 +13,79 @@ void Cabinet::setup()
 		Serial.println("Cabinet - initialization failed");
 	}
    
-    clearDirectory();
-    m_softwareSerial.begin(74880);   
+    //clearDirectory();
+    m_softwareSerial.begin(38400);   
 
-    m_fileCount = writeDirectoryContents();
+    m_fileCount = writeDirectoryContents() + 1;
     m_currentFileName = getNextFileName();
     writeNextFileName(m_currentFileName);
 }
 
 void Cabinet::clearDirectory()
 {
+    String fileName = "";
     File root = SD.open("/");
-    delay(DELAY);
     if (root) { 
         File f = root.openNextFile();
         while (f) 
-        {
-            SD.remove(String(f.name()));
+        {   
+            fileName = String(f.name());
+            Serial.println("removing file " + fileName);
             f.close();
-            delay(DELAY);
-            
-            f = root.openNextFile();
-            delay(DELAY);
+            SD.remove(fileName);
+            f = root.openNextFile();            
         }
         root.close();
-        delay(DELAY);
     }    
+}
+
+void Cabinet::checkForFileName()
+{
+    char c;
+    while (m_softwareSerial.available() > 0) 
+    { 
+        c = (char)m_softwareSerial.read();
+        Serial.print(c);
+        if (c != '~') 
+        { 
+           m_requestedFileName.concat(c);
+        }
+        else 
+        {
+            m_state = SerialState::NO_ACTIVITY;            
+            writeFileContents(m_requestedFileName);
+            m_requestedFileName = "";
+        }
+    }         
 }
 
 void Cabinet::checkBuffer()
 {    
-    if (m_softwareSerial.available() > 0)
-    {
-        String fileName = "";
-        while (m_softwareSerial.available() > 0) { 
-            fileName.concat((char)m_softwareSerial.read());
-            delay(10);
+    switch (m_state) 
+    { 
+    case SerialState::NO_ACTIVITY:
+        if (m_softwareSerial.available() > 0) 
+        {
+            m_state = SerialState::GETTING_FILE_NAME; 
+            checkForFileName();
         }
-        writeFileContents(fileName);
+        break;
+
+    case SerialState::GETTING_FILE_NAME:
+        checkForFileName();
+        break;
+
+    default:
+        while (m_softwareSerial.available() > 0) { 
+            Serial.print((char)m_softwareSerial.read());
+        }
+        break;
     }
 }
 
 void Cabinet::openCurrentFile()
 {
     m_dataFile = SD.open(m_currentFileName, FILE_WRITE);
-    delay(DELAY);
     if (!m_dataFile) 
     {        
         Serial.println("openCurrentFile - error opening " + m_currentFileName);
@@ -66,8 +99,8 @@ String Cabinet::getNextFileName()
 
 void Cabinet::writeFileContents(String fileName)
 {    
+    Serial.println("writing file " + fileName);
     File f = SD.open(fileName, FILE_READ);
-    delay(DELAY);
     
     if (f) {
         m_softwareSerial.print('f');
@@ -77,8 +110,8 @@ void Cabinet::writeFileContents(String fileName)
             m_softwareSerial.print(c);
         }
         m_softwareSerial.print('~');
-        m_softwareSerial.flush();            
         f.close();
+        Serial.println("done writing file " + fileName);
     }
 }
 
@@ -107,13 +140,9 @@ int Cabinet::writeDirectoryContents()
 
 void Cabinet::writeNextFileName(String fileName)
 {
-    int len = fileName.length();
-    m_softwareSerial.print('d');
-    for (int i = 0; i < len; i++) { 
-        m_softwareSerial.print(fileName.charAt(i));
-    }        
-    m_softwareSerial.print('~');
-    m_softwareSerial.flush();    
+    String fullMessage = String('d') + fileName + String('~');
+    Serial.println(fullMessage);
+    m_softwareSerial.print(fullMessage);
 }
 
 void Cabinet::writeLine(String s)
@@ -135,5 +164,4 @@ void Cabinet::writeLine(String s)
 void Cabinet::closeCurrentFile()
 {
     m_dataFile.close();
-    delay(DELAY);
 }

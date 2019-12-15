@@ -14,33 +14,68 @@ void Skooter::loop()
 {
     cabinet.checkBuffer();
 
-	if (doSomething) {
-
-        Serial.println("testing scan...");
+if (doSomething) { 
+//        Serial.println("testing scan...");
         cabinet.openCurrentFile();
 
-        scan(5);
-        delay(3000);
+     //   LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+     //   cabinet.writeLine(ld.toString());
 
+    scan(SCAN_INCREMENT);
         cabinet.closeCurrentFile();
-        delay(50);
-        
-		doSomething = false;
-	}
+//        delay(50);
+
+//    if (currentDistance - lidar.distance() > 25) {
+//        noiseMaker.makeStartupNoise();
+//    }        
+//    currentDistance = lidar.distance();
+doSomething = false;
+}
 	i++;
+}
+
+void Skooter::doMotionScan()
+{
+    int current;
+    double avg = lidar.distance();
+    for (int i = 1; i < MINIMUM_AVERAGES; i++) 
+    { 
+        delay(SHORT_DELAY);
+        avg += lidar.distance();
+    }   
+    avg /= MINIMUM_AVERAGES;
+
+    for (int i = 0; i < MOTION_SCAN_RATE; i++) 
+    { 
+        delay(SHORT_DELAY);
+        current = lidar.distance();             
+
+        if (current < MIN_DISTANCE && abs(avg - current) > (DELTA * avg)) 
+        { 
+            noiseMaker.makeFoundYouNoise();
+        }
+        else 
+        {        
+            avg *= (MINIMUM_AVERAGES + i);
+            avg += current;
+            avg /= (MINIMUM_AVERAGES + i + 1.0);
+        }
+    }   
 }
 
 void Skooter::scan(int increment)
 {
-     for (int a = PanTilt::MIN_TILT; a <= PanTilt::MAX_TILT; a+=increment) 
+     for (int a = PanTilt::LEVEL_TILT; a <= 60; a+=increment) 
      {
         panTilt.tiltWrite(a);
-        delay(50); // delays for 25 ms
+        delay(DELAY); // delays for 25 ms
 
         for (int p = 0; p <= 180; p+=increment) 
         { 
             panTilt.panWrite(p);
-            delay(50);
+            delay(DELAY);
+
+            doMotionScan();
         
             LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
             cabinet.writeLine(ld.toString());
@@ -48,12 +83,14 @@ void Skooter::scan(int increment)
 
         a += increment;
         panTilt.tiltWrite(a);
-        delay(50);
+        delay(DELAY);
 
         for (int p = 180; p >= 0; p-=increment) 
         { 
             panTilt.panWrite(p);
-            delay(50);
+            delay(DELAY);
+        
+            doMotionScan();
         
             LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
             cabinet.writeLine(ld.toString());

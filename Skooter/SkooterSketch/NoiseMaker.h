@@ -21,6 +21,16 @@ public:
 			delay(100);
 		}
 	}
+
+   void makeFoundYouNoise()
+   {
+        for (int j = 4; j > 0; j--) { 
+            tone(BUZZER_PIN, j * 256 - 1);
+            delay(50);
+            noTone(BUZZER_PIN);
+            delay(50);
+        }
+   }
 };
 
 

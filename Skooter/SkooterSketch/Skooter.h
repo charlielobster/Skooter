@@ -10,6 +10,13 @@
 class Skooter
 {
 public:  
+    static const int DELAY = 10;
+    static const int SHORT_DELAY = 0;
+    static const double DELTA = .75;
+    static const double MINIMUM_AVERAGES = 4;
+    static const int MOTION_SCAN_RATE = 4;
+    static const int SCAN_INCREMENT = 2;
+    static const int MIN_DISTANCE = 150;
 	void setup();
 	void loop(); 
 	//int calibrateTilt();
@@ -18,6 +25,7 @@ public:
 	void pan(int increment);
 	void tilt(int increment);
 	void scan(int increment);
+    void doMotionScan();
  //   void checkBuffer();
     
 private: 
@@ -28,6 +36,7 @@ private:
 	NoiseMaker noiseMaker;
 
 	long i = 0;
+    int currentDistance = 0;
 	bool doSomething = true;
 };
 
