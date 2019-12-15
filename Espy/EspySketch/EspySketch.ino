@@ -2,19 +2,20 @@
 #include <ESP8266WebServer.h>
 #include <FS.h>
 
-typedef enum EspyState
-{
-    IDLE,
-    GETTING_FILE_NAME,
-    GETTING_FILE
-} SerialState;
+#include "EspyRequestHandler.h"
+#include "SkooterFiles.h"
+#include "EspySerial.h"
 
-SerialState state = EspyState::IDLE;
-File file;
+typedef enum RequestState
+{
+	AVAILABLE,
+	PROCESSING_REQUEST
+} EspyRequestState;
+
+EspyRequestState requestState = RequestState::AVAILABLE;
+String localFiles = "";
+
 ESP8266WebServer server;
-String directoryFileName = "/SkFiles.txt";
-String welcomeMessage =
- "<html><body><p>Welcome to ESPY'S website!</p><br>Under construction!</body></html>";
 
 void wifiLogin()
 {
@@ -30,169 +31,10 @@ void wifiLogin()
 	}
 }
 
-String getFileContents(String fileName)
-{
-	String contents = "";
-	char buf[1024];
-	size_t len = 0;
-
-	File f = SPIFFS.open(fileName, "r");
-	if (f)
-	{
-		int fsize = f.size();
-		while (fsize > 0) {
-			len = std::min((int)(sizeof(buf) - 1), fsize);
-			f.read((uint8_t *)buf, len);
-			buf[len] = '\0';
-			contents += buf;
-			fsize -= len;
-		}
-	}
-	return contents;
-}
-
-String getFileTags()
-{
-	int len = 0;
-	String contents = "";
-	String fileName = "";
-	String fileContents = getFileContents(directoryFileName);
-	
-	while (fileContents.length() > 0)
-	{
-		len = fileContents.indexOf(',');
-		if (len > -1)
-		{
-			fileName = fileContents.substring(0, len);
-			fileContents = fileContents.substring(len + 1);
-		}
-		else
-		{
-			fileName = fileContents;
-			fileContents = "";
-		}
-		contents += ("<a href=\"/" + fileName + "\">/" + fileName + "</a><br>");
-	}		
-	return contents;
-}
-
-String createWelcomeMessage()
-{
-	String fileTags = getFileTags();
-	String message = "";
-	message =
-		(message +
-			"<html><body><p>" +
-			"Welcome to ESPY'S TOTALLY AWESOME website!" +
-			"</p><br>" +
-			"I talk to Skooter all the time! We are like BFFs!<br>&nbsp;<br>" +
-			"Psst!...I have some of Skooter\'s TOP-SECRET data files! Wanna see?" +
-			"<br>&nbsp;<br>" +
-			(fileTags.length() > 0 ? fileTags : 
-			    "DRAT! Skooter must be sleeping at the moment...that JERK-FACE!!") +
-			"<br>&nbsp;<br>" +
-			"</body></html>"
-			);
-	return message;
-}
-
-void getData()
-{
-    int bt;
-    while (Serial.available() > 0)
-    {
-        bt = Serial.read();
-        if (bt != '~') 
-        {            
-            file.write(bt);
-        }
-        else 
-        {
-            file.close();
-            state = EspyState::IDLE;
-        }
-    }    
-}
-
-void checkBuffer()
-{
-    switch (state)
-    {
-    case EspyState::IDLE:
-        if (Serial.peek() == 'd') 
-        { 
-            Serial.read();
-            file = SPIFFS.open(directoryFileName, "a");
-            file.seek(file.size(), SeekSet);
-            if (file.size() > 0) file.write(',');
-            state = EspyState::GETTING_FILE_NAME;            
-            getData();
-            if (state == EspyState::IDLE) 
-            { 
-                welcomeMessage = createWelcomeMessage();
-            }
-        } 
-        else if (Serial.peek() == 'f') 
-        { 
-            Serial.read();
-            state = EspyState::GETTING_FILE;
-            getData();
-        }
-        break;
-    
-    case EspyState::GETTING_FILE_NAME:
-        getData();
-        if (state == EspyState::IDLE) 
-        { 
-            welcomeMessage = createWelcomeMessage();
-        }
-        break;
-
-    case EspyState::GETTING_FILE:
-        getData();
-        break;
-
-    default:
-        break;
-    }
-}
-
-bool foundFile(String fileName)
-{
-	Dir dir = SPIFFS.openDir("/");
-    
-	while (dir.next())
-	{
-		String nextFile = dir.fileName();
-		if (fileName == nextFile) {
-			return true;
-		}
-	}
-	return false;
-}
-
-
-String getFileNotFoundMessage()
-{
-	String message = "File Not Found\n\n";
-	message += "URI: ";
-	message += server.uri();
-	message += "\nMethod: ";
-	message += (server.method() == HTTP_GET) ? "GET" : "POST";
-	message += "\nArguments: ";
-	message += server.args();
-	message += "\n";
-	for (uint8_t i = 0; i < server.args(); i++)
-	{
-		message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
-	}
-	return message;
-}
-
 void onRoot()
 {
     digitalWrite(LED_BUILTIN, 1);
-    server.send(200, "text/html", welcomeMessage);
+    server.send(200, "text/html", EspyRequestHandler::welcomeMessage);
     digitalWrite(LED_BUILTIN, 0);
 }
 
@@ -201,23 +43,31 @@ void checkFileName()
     digitalWrite(LED_BUILTIN, 1);
 
 	String fileName = server.uri();
+    String withoutSlash = fileName.substring(1);
 
-    if (foundFile(fileName)) 
+    if (localFiles.indexOf(fileName) >= 0) 
     {
-		File f = SPIFFS.open(fileName, "r");
-		size_t sent = server.streamFile(f, "text/plain");
-		f.close();
+		EspyRequestHandler::streamFile(server, fileName);
     }
-    else if (welcomeMessage.indexOf(fileName) >= 0)
+    else if (SkooterFiles::asList.indexOf(withoutSlash) >= 0)
     {
         // ask Skooter for the file contents
-		Serial.print(fileName.substring(1));        
-        file = SPIFFS.open(fileName, "w");
-        server.send(200, "text/html", "<html><body>File is being saved to the cache.<br>Please try again in a moment!</body></html>");
+		Serial.print(withoutSlash + '~');      
+
+        // set the file EspySerial will write to
+		EspySerial::setFile(fileName);   
+
+        // append the file name to the local files
+		if (localFiles.length() > 0) localFiles.concat(',');
+		localFiles += fileName; 	
+
+        // enter processing state
+		requestState = RequestState::PROCESSING_REQUEST;
     }
     else 
     {
-        server.send(404, "text/plain", getFileNotFoundMessage());
+        server.send(404, "text/plain", 
+			EspyRequestHandler::getFileNotFoundMessage(server));
     }
        
     digitalWrite(LED_BUILTIN, 0);
@@ -225,15 +75,12 @@ void checkFileName()
 
 void setup()
 {
-    Serial.begin(74880);
-    SPIFFS.begin();
-	SPIFFS.format();
-
     pinMode(LED_BUILTIN, OUTPUT);
-
     digitalWrite(LED_BUILTIN, 1);
 
-	file = SPIFFS.open(directoryFileName, "w");
+    Serial.begin(74880);    
+	SPIFFS.begin();
+	SPIFFS.format();
 
 	wifiLogin();
 
@@ -246,9 +93,30 @@ void setup()
     digitalWrite(LED_BUILTIN, 0);
 }
 
+void handleRequests()
+{
+	switch (requestState)
+	{
+	case RequestState::AVAILABLE:
+		server.handleClient();
+		break;
+
+	case RequestState::PROCESSING_REQUEST:
+		if (EspySerial::state == SerialState::NO_TRANSACTION) 
+		{
+			EspyRequestHandler::streamFile(server, EspySerial::lastFileName());
+			requestState = RequestState::AVAILABLE;
+		}
+		break;
+
+	default:
+		break;
+	}
+}
+
 void loop()
 {
-	checkBuffer();
-	server.handleClient();
+	EspySerial::checkBuffer();
+	handleRequests();
 	MDNS.update();
 }
