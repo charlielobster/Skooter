@@ -14,6 +14,7 @@ Cabinet::Cabinet() :
 
 void Cabinet::setup() 
 {
+    /*
     m_softwareSerial.begin(38400);   
 	delay(DELAY);
 
@@ -34,11 +35,14 @@ void Cabinet::setup()
 
 	openCurrentFile();
 	delay(DELAY);
+   */
 }
 
 // only during setup
+/*
 void Cabinet::clearDirectory()
 {
+    /*
     File root = SD.open("/");
     delay(DELAY);
 
@@ -70,6 +74,7 @@ void Cabinet::clearDirectory()
 
     root.close();
     delay(DELAY);
+    
 }
 
 // only during setup
@@ -109,7 +114,7 @@ void Cabinet::writeDirectoryContents()
     root.close();
     delay(DELAY);
 }
-
+*/
 void Cabinet::checkForFileName()
 {
     char c;
@@ -133,6 +138,7 @@ void Cabinet::checkForFileName()
 void Cabinet::loop()
 {    
     checkForFileName();
+    /*
     switch (m_state) 
     {         
     case CabinetState::OPENING_REQUESTED_FILE:
@@ -154,9 +160,9 @@ void Cabinet::loop()
         //    Serial.print((char)m_softwareSerial.read());
         //}
         break;
-    }
+    }*/
 }
-
+/*
 void Cabinet::checkIfRequestedFileIsOpen()
 {
    if (m_currentFile) m_currentFile.close();
@@ -212,14 +218,14 @@ void Cabinet::openCurrentFile()
         }
     } 
 }
-
+*/
 void Cabinet::writeCurrentFileName()
 {
     m_softwareSerial.print('d');
     m_softwareSerial.print(m_currentFileName);
     m_softwareSerial.print('~');
  }
-
+/*
 void Cabinet::writeToCurrentFile()
 {
     static int i = 0;
@@ -260,10 +266,12 @@ void Cabinet::writeToCurrentFile()
         }
     }
 }
-
+*/
 void Cabinet::writeLine(String line)
 {
-	strcpy(m_currentLine, line.c_str());
-    m_currentLineIndex = 0;
-    m_state = CabinetState::WRITING_TO_CURRENT_FILE;
+    
+	strcpy(m_currentFileName, line.c_str());
+    writeCurrentFileName();
+//    m_currentLineIndex = 0;
+//    m_state = CabinetState::WRITING_TO_CURRENT_FILE;
 }

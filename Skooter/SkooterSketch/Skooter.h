@@ -4,7 +4,7 @@
 #include "Lidar.h" 
 #include "PanTilt.h"
 #include "Tracks.h"
-#include "Cabinet.h"
+//#include "Cabinet.h"
 #include "NoiseMaker.h"
 
 typedef enum SkooterState
@@ -37,7 +37,7 @@ private:
 	Lidar lidar;
 	PanTilt panTilt;
 	Tracks tracks;
-	Cabinet cabinet;
+//	Cabinet cabinet;
 	NoiseMaker noiseMaker;
 
     skooterState m_state;

@@ -4,8 +4,8 @@
 #define _NAME_PREFIX_ "skdata_"
 #define _EXTENSION_ ".txt"
 
-#include <SPI.h> 
-#include <SD.h>
+//#include <SPI.h> 
+//#include <SD.h>
 #include <SoftwareSerial.h>
 
 typedef enum CabinetState
@@ -40,13 +40,16 @@ public:
 	inline cabinetState state() { return m_state;  }
 
 private:	
+    /*
     void clearDirectory();
     void writeDirectoryContents();
+    */
     void writeCurrentFileName();
-    void openCurrentFile();
+//    void openCurrentFile();
     void writeToCurrentFile();
+
     void checkForFileName();   
-    void checkIfRequestedFileIsOpen();
+//    void checkIfRequestedFileIsOpen();
 
 	int m_fileCount;
     int m_requestedFileNameIndex;
@@ -54,7 +57,7 @@ private:
     char m_requestedFileName[13];
 	char m_currentLine[40];
     int m_currentLineIndex;
-    File m_currentFile;
+    //File m_currentFile;
     SoftwareSerial m_softwareSerial;
 	cabinetState m_state;
 };

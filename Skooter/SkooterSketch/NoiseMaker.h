@@ -27,7 +27,7 @@ public:
 
 	void loop()
 	{
-        m_delay--;
+     /*   m_delay--;
         if (m_delay <= 0) m_delay = 0;
 
         if (m_delay == 0)
@@ -35,10 +35,11 @@ public:
             switch (m_state)
             {
             case NoiseMakerState::FOUND_YOU_NOISE_ON:
-                
+				noTone(BUZZER_PIN);
+				m_state = NoiseMakerState::FOUND_YOU_NOISE_OFF;
                 break;
             }
-        }
+        }*/
 	}
 
 	void makeStartupNoise() 
@@ -53,7 +54,8 @@ public:
 
    void makeFoundYouNoise()
    {
-        for (int j = 4; j > 0; j--) { 
+        for (int j = 4; j > 0; j--) 
+		{ 
             tone(BUZZER_PIN, j * 256 - 1);
             delay(50);
             noTone(BUZZER_PIN);

@@ -8,13 +8,13 @@ void Skooter::setup()
     lidar.setup();
 	panTilt.setup();
 	tracks.setup();
-    cabinet.setup();
+  //  cabinet.setup();
 	noiseMaker.setup();
 }
 
 void Skooter::loop()
 {
-    cabinet.loop();
+  //  cabinet.loop();
 	noiseMaker.loop();
 	tracks.loop();
 	panTilt.loop();
@@ -98,6 +98,7 @@ void Skooter::loop()
             break;        
     
         case SkooterState::SCAN_WRITING_TO_FILE:
+        
             if (cabinet.state() == CabinetState::NO_ACTIVITY) 
             {
                 LidarData ld(tracks.x(), tracks.y(), tracks.heading(), 
