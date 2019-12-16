@@ -7,20 +7,30 @@
 // pin 3 is ON, 1, 2, 4, 5, 6 are OFF
 // FWD and TURN orange connected to forwardPin and turnPin (see attach)
 // FLIP + (red) and - (brown) connected to arduino Vin and Gnd
+
+typedef enum TracksState
+{
+	STANDING_STILL,
+	MOVING_FORWARD,
+	MOVING_BACKWARD,
+	TURNING_LEFT,
+	TURNING_RIGHT
+} tracksState;
+
 class Tracks
 {
 public:	
-	static const int MOVE_SPEED = 20;
-	static const int TURN_SPEED = 20; 
-	static const int MOVE_TIME = 100;	// unused
-	static const int TURN_TIME = 100;
 	static const int FORWARD_PIN = 5;
 	static const int TURN_PIN = 4;
-
+	static const int MOVE_SPEED = 20;
+    static const int MOVE_TIME = 100;
+    
 	Tracks();
 	~Tracks() {}
 
 	void setup();
+	void loop();
+
 	void turnToAngle(int angle);
 	void clockwiseTurn(int angle);
 	void clockwiseCircle();
@@ -34,6 +44,7 @@ public:
 	inline int heading() { return m_heading; }
 	inline int x() { return m_x; }
 	inline int y() { return m_y; }
+	inline tracksState state() { return m_state; }
 
 private: 
 	void turnRight();
@@ -46,5 +57,7 @@ private:
 	int m_heading;
 	int m_x;
 	int m_y;
+	tracksState m_state;
+	int m_delay;
 };
 #endif

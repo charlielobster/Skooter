@@ -1,6 +1,8 @@
 #include "Skooter.h" 
 #include "LidarData.h"
 
+Skooter::Skooter() : m_state(SkooterState::AWAKE), m_scanningLeft(true), m_scanningUp(true) {}
+
 void Skooter::setup()
 {
     lidar.setup();
@@ -12,28 +14,152 @@ void Skooter::setup()
 
 void Skooter::loop()
 {
-    cabinet.checkBuffer();
+    cabinet.loop();
+	noiseMaker.loop();
+	tracks.loop();
+	panTilt.loop();
 
-if (doSomething) { 
-//        Serial.println("testing scan...");
-        cabinet.openCurrentFile();
+    switch (m_state)
+    {
+    case SkooterState::AWAKE:
+        if (m_delay == 0) 
+        {
+            m_state = SCAN_TILTING;
+            m_scanningLeft = false;
+            m_scanningUp = true;
+            m_avgReading = 0;
+            m_scanPanAngle = PanTilt::PAN_CENTER;
+            m_scanTiltAngle = PanTilt::LEVEL_TILT;
+            panTilt.tiltWrite(m_scanTiltAngle);
+            m_delay = DELAY;
+            m_state = SkooterState::SCAN_TILTING;                        
+        }
+        break;
 
-     //   LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
-     //   cabinet.writeLine(ld.toString());
+    case SkooterState::SCAN_TILTING:
+        if (m_delay == 0) 
+        {
+            m_numReadings = 0;
+            m_avgReading = 0;
+            m_state = SkooterState::SCAN_GETTING_AVERAGE;
+            m_delay = SHORT_DELAY;
+        }
+        break;
 
-    scan(SCAN_INCREMENT);
-        cabinet.closeCurrentFile();
-//        delay(50);
+    case SkooterState::SCAN_GETTING_AVERAGE:
+        if (m_delay == 0)
+        {
+            if (m_numReadings < MINIMUM_AVERAGES) 
+            {
+                m_avgReading += lidar.distance();
+                m_numReadings++;
+                m_delay = SHORT_DELAY;
 
-//    if (currentDistance - lidar.distance() > 25) {
-//        noiseMaker.makeStartupNoise();
-//    }        
-//    currentDistance = lidar.distance();
-doSomething = false;
+                if (m_numReadings == MINIMUM_AVERAGES) 
+                {
+                    m_numReadings = 0;
+                    m_avgReading /= MINIMUM_AVERAGES;                
+                    m_state = SkooterState::SCAN_TAKING_MEASUREMENT;    
+                }
+            }
+        }
+        break;
+
+    case SkooterState::SCAN_TAKING_MEASUREMENT:
+        if (m_delay == 0)
+        {
+            if (m_numReadings < MOTION_SCAN_RATE) 
+            {
+                m_currentReading = lidar.distance();
+                m_delay = SHORT_DELAY;
+
+                if (m_currentReading < MIN_DISTANCE && 
+                    abs(m_avgReading - m_currentReading) > (DELTA * m_avgReading)) 
+                { 
+                    noiseMaker.makeFoundYouNoise();
+                }
+                else 
+                {        
+                    m_avgReading *= (MINIMUM_AVERAGES + m_numReadings);
+                    m_avgReading += m_currentReading;
+                    m_avgReading /= (MINIMUM_AVERAGES + m_numReadings + 1.0);                    
+                }
+
+                m_numReadings++;
+                if (m_numReadings == MOTION_SCAN_RATE)
+                {
+                    m_state = SkooterState::SCAN_WRITING_TO_FILE;
+                }
+            }
+        }
+        break;
+
+    case SkooterState::SCAN_PANNING:
+        if (m_delay == 0) 
+        {
+            m_numReadings = 0;
+            m_avgReading = 0;
+            m_state = SkooterState::SCAN_GETTING_AVERAGE;
+            m_delay = SHORT_DELAY;
+        }
+        break;        
+
+    case SkooterState::SCAN_WRITING_TO_FILE:
+        if (cabinet.state() == CabinetState::NO_ACTIVITY) 
+        {
+            LidarData ld(tracks.x(), tracks.y(), tracks.heading(), 
+                panTilt.tiltAngle(), panTilt.panAngle(), m_avgReading);
+            cabinet.writeLine(ld.toString());
+            m_state = SkooterState::SCAN_PANNING;
+            m_delay = DELAY;
+            m_scanPanAngle += (m_scanningLeft ? -SCAN_INCREMENT : SCAN_INCREMENT);
+            if (m_scanPanAngle - SCAN_INCREMENT < 0)
+            { 
+                m_scanningLeft = false;
+            }
+            if (m_scanPanAngle + SCAN_INCREMENT > 180)
+            {
+                m_scanningLeft = true;
+            }
+            if (m_scanPanAngle == PanTilt::PAN_CENTER)
+            {
+                if ((m_scanTiltAngle + SCAN_INCREMENT) < 60)
+                {
+                    m_scanTiltAngle += SCAN_INCREMENT;
+                    panTilt.tiltWrite(m_scanTiltAngle);
+                    m_delay = DELAY;                    
+                    m_state = SkooterState::SCAN_TILTING;
+                }
+                else
+                {
+                    panTilt.panWrite(PanTilt::PAN_CENTER);
+                    panTilt.tiltWrite(PanTilt::LEVEL_TILT);
+                    m_state = SkooterState::AWAKE;
+                    m_delay = DELAY;
+                }
+            }
+            panTilt.panWrite(m_scanPanAngle);
+        }
+        break;
+
+    case SkooterState::TAKING_MEASUREMENT:
+        if (cabinet.state() == CabinetState::NO_ACTIVITY) 
+        {
+            LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
+            cabinet.writeLine(ld.toString());
+            //if (j == 2000) { 
+             //   m_state = SkooterState::AWAKE;
+               // Serial.println("done");
+           // }
+        }
+        break;
+    }
+    
+    m_delay--;
+    if (m_delay <= 0) m_delay = 0;
+    
 }
-	i++;
-}
-
+/*
 void Skooter::doMotionScan()
 {
     int current;
@@ -68,6 +194,7 @@ void Skooter::scan(int increment)
      for (int a = PanTilt::LEVEL_TILT; a <= 60; a+=increment) 
      {
         panTilt.tiltWrite(a);
+        m_state = SkooterState::SCAN_TILTING;
         delay(DELAY); // delays for 25 ms
 
         for (int p = 0; p <= 180; p+=increment) 
@@ -78,7 +205,7 @@ void Skooter::scan(int increment)
             doMotionScan();
         
             LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
-            cabinet.writeLine(ld.toString());
+      //      cabinet.writeLine(ld.toString());
         }
 
         a += increment;
@@ -93,7 +220,7 @@ void Skooter::scan(int increment)
             doMotionScan();
         
             LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
-            cabinet.writeLine(ld.toString());
+      //      cabinet.writeLine(ld.toString());
         }
     }
     panTilt.tiltWrite(45);
@@ -106,7 +233,7 @@ void Skooter::pan(int increment)
 		panTilt.panWrite(a);
 		delay(25);
         LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
-        cabinet.writeLine(ld.toString());
+      //  cabinet.writeLine(ld.toString());
 	} 
     panTilt.panWrite(90);
 }
@@ -119,7 +246,7 @@ void Skooter::tilt(int increment)
 		panTilt.tiltWrite(a);
 		delay(25); // delays for 25 ms
 		LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
-		cabinet.writeLine(ld.toString());
+	//	cabinet.writeLine(ld.toString());
 	}
     panTilt.tiltWrite(45);
 }
@@ -194,7 +321,7 @@ void Skooter::tilt(int increment)
 //	panTilt.setCalibratedTilt(calibratedTilt);
 //  
 //	return calibratedTilt;
-//	*/
+//	
 //}
 //
 //int Skooter::calingPan() 
@@ -233,15 +360,15 @@ void Skooter::tilt(int increment)
 //  calingPan();
 //  while (calibratedPan < 85 || calibratedPan > 95) {
 //    if (calibratedPan < 85) {
-//      tracks.turnLeft(90-/*calibratedPan*/); 
+//      tracks.turnLeft(90-//calibratedPan//); 
 //  	FIXME turnRight has to be able to take in a degree and turn long enough to reach that degree then stop
 //    }
 //    else if (calibratedPan > 95) {
-//      tracks.turnRight(180-/*calibratedPan*/); 
+//      tracks.turnRight(180-//calibratedPan//); 
 //  	FIXME as above and also check which direction each one is
 //    }
 //    calingPan();
 //  }
 //  
 //  return calibratedPan;
-//}
+//}*/

@@ -22,7 +22,7 @@ void wifiLogin()
 	int i = 0;
 
 	WiFi.mode(WIFI_STA);
-	WiFi.begin("ssid", "password");
+	WiFi.begin("CCNYPhysicsClub_2.4", "SuperSecurePassword@Physics421");
 
 	while (WiFi.status() != WL_CONNECTED && i < 5000)
 	{
@@ -61,8 +61,10 @@ void checkFileName()
 		if (localFiles.length() > 0) localFiles.concat(',');
 		localFiles += fileName; 	
 
+        server.send(200, "text/html", "Your request is being processed");
+        
         // enter processing state
-		requestState = RequestState::PROCESSING_REQUEST;
+		//requestState = RequestState::PROCESSING_REQUEST;
     }
     else 
     {
@@ -78,7 +80,7 @@ void setup()
     pinMode(LED_BUILTIN, OUTPUT);
     digitalWrite(LED_BUILTIN, 1);
 
-    Serial.begin(74880);    
+    Serial.begin(38400);    
 	SPIFFS.begin();
 	SPIFFS.format();
 

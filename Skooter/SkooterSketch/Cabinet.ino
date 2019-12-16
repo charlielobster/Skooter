@@ -3,40 +3,111 @@
 Cabinet::Cabinet() : 
     m_softwareSerial(ESP_TX_PIN, ESP_RX_PIN), 
     m_fileCount(0), 
-    m_currentFileName(""),
-    m_requestedFileName(""),
-    m_state(SerialState::NO_ACTIVITY) {}
+    m_state(CabinetState::NO_ACTIVITY),
+    m_requestedFileNameIndex(0),
+    m_currentLineIndex(0)
+{
+    strcpy(m_currentFileName, "");
+    strcpy(m_requestedFileName, "");
+    strcpy(m_currentLine, "");
+}
 
 void Cabinet::setup() 
 {
-	if (!SD.begin(CHIP_SELECT)) {
-		Serial.println("Cabinet - initialization failed");
-	}
-   
-    //clearDirectory();
     m_softwareSerial.begin(38400);   
+	delay(DELAY);
 
-    m_fileCount = writeDirectoryContents() + 1;
-    m_currentFileName = getNextFileName();
-    writeNextFileName(m_currentFileName);
+	SD.begin(CHIP_SELECT);
+	delay(DELAY);
+
+	if (CLEAR_DIRECTORY_AT_SETUP) 
+	{ 
+		clearDirectory();
+	} 
+	else 
+	{
+		writeDirectoryContents();
+	}
+
+    sprintf(m_currentFileName, "skdat_%d.txt", m_fileCount);
+	delay(DELAY);
+
+	openCurrentFile();
+	delay(DELAY);
 }
 
+// only during setup
 void Cabinet::clearDirectory()
 {
-    String fileName = "";
     File root = SD.open("/");
-    if (root) { 
-        File f = root.openNextFile();
-        while (f) 
-        {   
-            fileName = String(f.name());
-            Serial.println("removing file " + fileName);
-            f.close();
-            SD.remove(fileName);
-            f = root.openNextFile();            
-        }
-        root.close();
-    }    
+    delay(DELAY);
+
+    while (!root)
+    {
+        SD.end();
+        SD.begin(CHIP_SELECT);
+        root = SD.open("/");                
+    }
+
+    root.rewindDirectory();
+    delay(DELAY);
+
+    m_currentFile = root.openNextFile();
+	delay(DELAY);
+
+    while (m_currentFile) 
+    {   
+        strcpy(m_currentFileName, m_currentFile.name());
+        m_currentFile.close();
+		delay(DELAY);
+
+        SD.remove(m_currentFileName);
+		delay(DELAY);
+
+        m_currentFile = root.openNextFile();            
+		delay(DELAY);
+    }
+
+    root.close();
+    delay(DELAY);
+}
+
+// only during setup
+void Cabinet::writeDirectoryContents()
+{
+    m_fileCount = 0;
+	File root = SD.open("/");
+	delay(DELAY);
+
+    while (!root)
+    {
+        SD.end();
+        SD.begin(CHIP_SELECT);
+        root = SD.open("/");                
+    }
+
+	root.rewindDirectory();
+	delay(DELAY);
+
+    m_currentFile = root.openNextFile();
+    delay(DELAY);
+
+    while (m_currentFile) 
+    {
+        m_fileCount++;
+		strcpy(m_currentFileName, m_currentFile.name());
+        writeCurrentFileName();
+        delay(DELAY);
+        
+        m_currentFile.close();
+		delay(DELAY);
+
+		m_currentFile = root.openNextFile();
+        delay(DELAY);
+    }
+        
+    root.close();
+    delay(DELAY);
 }
 
 void Cabinet::checkForFileName()
@@ -45,123 +116,154 @@ void Cabinet::checkForFileName()
     while (m_softwareSerial.available() > 0) 
     { 
         c = (char)m_softwareSerial.read();
-        Serial.print(c);
         if (c != '~') 
         { 
-           m_requestedFileName.concat(c);
+           m_requestedFileName[m_requestedFileNameIndex++] = c;
         }
         else 
         {
-            m_state = SerialState::NO_ACTIVITY;            
-            writeFileContents(m_requestedFileName);
-            m_requestedFileName = "";
+            m_requestedFileName[m_requestedFileNameIndex] = '\0';
+            m_state = CabinetState::OPENING_REQUESTED_FILE;
+           // Serial.println("requested file "); 
+           // Serial.println(m_requestedFileName);
         }
     }         
 }
 
-void Cabinet::checkBuffer()
+void Cabinet::loop()
 {    
+    checkForFileName();
     switch (m_state) 
-    { 
-    case SerialState::NO_ACTIVITY:
-        if (m_softwareSerial.available() > 0) 
-        {
-            m_state = SerialState::GETTING_FILE_NAME; 
-            checkForFileName();
-        }
+    {         
+    case CabinetState::OPENING_REQUESTED_FILE:
+        checkIfRequestedFileIsOpen();
         break;
 
-    case SerialState::GETTING_FILE_NAME:
-        checkForFileName();
+    case CabinetState::OPENING_CURRENT_FILE:
+        openCurrentFile();       
         break;
 
+	case CabinetState::WRITING_TO_CURRENT_FILE:
+		writeToCurrentFile();
+        break;
+
+    case CabinetState::NO_ACTIVITY:
     default:
-        while (m_softwareSerial.available() > 0) { 
-            Serial.print((char)m_softwareSerial.read());
-        }
+        //while (m_softwareSerial.available() > 0) 
+		//{ 
+        //    Serial.print((char)m_softwareSerial.read());
+        //}
         break;
+    }
+}
+
+void Cabinet::checkIfRequestedFileIsOpen()
+{
+   if (m_currentFile) m_currentFile.close();
+    m_currentFile = SD.open(m_requestedFileName, FILE_READ);            
+    if (!m_currentFile)
+    {
+        SD.end();
+        if (!SD.begin(CHIP_SELECT)) ;
+        m_currentFile = SD.open(m_requestedFileName, FILE_READ);
+    }                
+	if (m_currentFile) 
+	{        
+        m_softwareSerial.print('f');
+        int sz = m_currentFile.size();
+        m_currentFile.seek(0);
+        for (int i = 0; i < sz; i++) 
+		{
+            char c = (char)m_currentFile.read();
+            m_softwareSerial.print(c);
+          //  Serial.print(c);
+        }
+        m_softwareSerial.print('~');
+        m_currentFile.close();
+    
+        strcpy(m_requestedFileName, "");
+        m_requestedFileNameIndex = 0;
+
+        m_state = CabinetState::OPENING_CURRENT_FILE;
+        openCurrentFile();
     }
 }
 
 void Cabinet::openCurrentFile()
 {
-    m_dataFile = SD.open(m_currentFileName, FILE_WRITE);
-    if (!m_dataFile) 
-    {        
-        Serial.println("openCurrentFile - error opening " + m_currentFileName);
-    }
-}
-
-String Cabinet::getNextFileName()
-{
-    return String(_NAME_PREFIX_) + String(m_fileCount) + String(_EXTENSION_);
-}
-
-void Cabinet::writeFileContents(String fileName)
-{    
-    Serial.println("writing file " + fileName);
-    File f = SD.open(fileName, FILE_READ);
-    
-    if (f) {
-        m_softwareSerial.print('f');
-        int sz = f.size();
-        for (int i = 0; i < sz; i++) {
-            char c = (char)f.read();
-            m_softwareSerial.print(c);
-        }
-        m_softwareSerial.print('~');
-        f.close();
-        Serial.println("done writing file " + fileName);
-    }
-}
-
-int Cabinet::writeDirectoryContents()
-{
-    int fileCount = 1;
-    File root = SD.open("/");
-    delay(DELAY);
-    if (root) { 
-        File f = root.openNextFile();
-        delay(DELAY);
-        while (f) 
+    if (m_currentFile)  m_currentFile.close();
+    m_currentFile = SD.open(m_currentFileName, FILE_WRITE);            
+    if (!m_currentFile)
+    {
+        SD.end();
+        if (!SD.begin(CHIP_SELECT)) ;
+        m_currentFile = SD.open(m_currentFileName, FILE_WRITE);
+    }                  
+    if (m_currentFile)
+    {
+        if (strlen(m_currentLine) > 0)
         {
-            fileCount++;
-            writeNextFileName(f.name());
-            delay(DELAY);
-            
-            f.close();
-            f = root.openNextFile();
-            delay(DELAY);
+            m_state = CabinetState::WRITING_TO_CURRENT_FILE;
+            writeToCurrentFile();
         }
-        root.close();
+        else
+        { 
+            m_state = CabinetState::NO_ACTIVITY;
+        }
+    } 
+}
+
+void Cabinet::writeCurrentFileName()
+{
+    m_softwareSerial.print('d');
+    m_softwareSerial.print(m_currentFileName);
+    m_softwareSerial.print('~');
+ }
+
+void Cabinet::writeToCurrentFile()
+{
+    static int i = 0;
+    if (m_currentFile && strlen(m_currentLine) > 0)
+    {
+        if ((m_currentFile.size() + strlen(m_currentLine) - m_currentLineIndex) > MAX_FILE_SIZE)
+        {
+            writeCurrentFileName();
+            m_currentFile.close();      
+            m_fileCount++;      
+            sprintf(m_currentFileName, "skdat_%d.txt", m_fileCount);
+            m_state = CabinetState::OPENING_CURRENT_FILE;
+            openCurrentFile();            
+        }
+        else 
+        {            
+            if (m_currentLineIndex < strlen(m_currentLine))
+            {                
+                if (!m_currentFile.write(m_currentLine[m_currentLineIndex]))                
+                {
+                    m_state = CabinetState::OPENING_CURRENT_FILE;  
+                    openCurrentFile();                  
+                } 
+                else 
+                {
+                    m_currentLineIndex++;
+                }
+            }
+            else
+            {
+            //    Serial.println("finishing line " + String(i++));
+                m_currentFile.write('\r');
+                m_currentFile.write('\n');
+                m_currentFile.flush();
+                strcpy(m_currentLine, "");
+                m_state = CabinetState::NO_ACTIVITY;
+            }
+        }
     }
-    return fileCount;
 }
 
-void Cabinet::writeNextFileName(String fileName)
+void Cabinet::writeLine(String line)
 {
-    String fullMessage = String('d') + fileName + String('~');
-    Serial.println(fullMessage);
-    m_softwareSerial.print(fullMessage);
-}
-
-void Cabinet::writeLine(String s)
-{
-	if (m_dataFile) 
-	{		
-        if ((m_dataFile.size() + s.length()) > MAX_FILE_SIZE) 
-        {   
-            closeCurrentFile();
-            m_fileCount++;
-            m_currentFileName = getNextFileName();
-            writeNextFileName(m_currentFileName);
-            openCurrentFile();
-        }
-		m_dataFile.println(s);
-	}
-}
-
-void Cabinet::closeCurrentFile()
-{
-    m_dataFile.close();
+	strcpy(m_currentLine, line.c_str());
+    m_currentLineIndex = 0;
+    m_state = CabinetState::WRITING_TO_CURRENT_FILE;
 }

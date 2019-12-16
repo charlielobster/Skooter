@@ -17,7 +17,7 @@ struct LidarData
 
 	String toString() const
 	{
-		char data[100];
+		char data[40];
 		sprintf(data, "%d,%d,%d,%d,%d,%d", x, y, heading, theta, phi, d);
 		return String(data);
 	}

@@ -1,8 +1,11 @@
 #include "Tracks.h" 
 
-Tracks::Tracks() : m_x(0), m_y(0), m_heading(0)
-{
-}
+Tracks::Tracks() : 
+	m_x(0), 
+	m_y(0), 
+	m_heading(0), 
+	m_state(TracksState::STANDING_STILL),
+	m_delay(0) {}
 
 void Tracks::setup()
 {
@@ -10,16 +13,44 @@ void Tracks::setup()
 	right.attach(FORWARD_PIN, 1000, 2000);
 }
 
+void Tracks::loop()
+{
+	switch (m_state)
+	{
+	case TracksState::STANDING_STILL:
+		stop();
+		break;
+	case TracksState::TURNING_LEFT:
+		turnLeft();
+		break;
+	case TracksState::TURNING_RIGHT:
+		turnRight();
+		break;
+	case TracksState::MOVING_FORWARD:
+		forward();
+		break;
+	case TracksState::MOVING_BACKWARD:
+		backward();
+		break;
+	}
+	m_delay--;
+	if (m_delay <= 0) 
+	{
+		m_delay = 0;
+		m_state = TracksState::STANDING_STILL;
+	}
+}
+
 void Tracks::turnRight()
 {
-	right.write(90 - TURN_SPEED); 
-	left.write(90 + TURN_SPEED); 
+	right.write(40);
+	left.write(130);
 }
 
 void Tracks::turnLeft()
 {
-	right.write(90 + TURN_SPEED); 
-	left.write(90 - TURN_SPEED); 
+	right.write(130);
+	left.write(40);
 }
 
 void Tracks::forward()
@@ -49,53 +80,42 @@ void Tracks::turnToAngle(int angle)
 
 void Tracks::clockwiseTurn(int angle)
 {
-	int d = floor(angle * 10250.0 / 360.0);
-	right.write(40);
-	left.write(130);
-	delay(d);
-	left.write(90);
-	right.write(90);
+	m_delay = floor(angle * 10250.0 / 360.0);
+	m_state = TracksState::TURNING_RIGHT;
+	turnRight();
 }
 
 void Tracks::counterClockwiseTurn(int angle)
 {
-	int d = floor(angle * 11000.0 / 360.0);
-	right.write(130);
-	left.write(40);
-	delay(d);
-	left.write(90);
-	right.write(90);
+	m_delay = floor(angle * 11000.0 / 360.0);
+	m_state = TracksState::TURNING_LEFT;
+	turnLeft();
 }
 
 void Tracks::clockwiseCircle()
 {
-	right.write(40);
-	left.write(130);
-	delay(10750);
-	left.write(90);
-	right.write(90);
+	m_delay = 10750;
+	m_state = TracksState::TURNING_RIGHT;
+	turnRight();
 }
 
 void Tracks::counterClockwiseCircle()
 {
-	right.write(130);
-	left.write(40);
-	delay(11250);
-	left.write(90);
-	right.write(90);
+	m_delay = 11250;
+	m_state = TracksState::TURNING_LEFT;
+	turnLeft();
 }
 
 void Tracks::goForward(int units)
 {
+	m_state = TracksState::MOVING_FORWARD;
+	m_delay = units * MOVE_TIME;
 	forward();
-	delay(units * MOVE_TIME);
-	stop();
 }
 
 void Tracks::goBackward(int units)
 {
+	m_state = TracksState::MOVING_BACKWARD;
+	m_delay = units * MOVE_TIME;
 	backward();
-	delay(units * MOVE_TIME);
-	stop();
-	//  delay(MINIMUM_WAIT_TIME);
 }
