@@ -50,11 +50,11 @@ private:
 
 	int m_fileCount;
     int m_requestedFileNameIndex;
-	File m_currentFile;
 	char m_currentFileName[13];
     char m_requestedFileName[13];
 	char m_currentLine[40];
     int m_currentLineIndex;
+    File m_currentFile;
     SoftwareSerial m_softwareSerial;
 	cabinetState m_state;
 };
