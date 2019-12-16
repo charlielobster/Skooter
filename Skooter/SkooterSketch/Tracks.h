@@ -22,7 +22,7 @@ class Tracks
 public:	
 	static const int FORWARD_PIN = 5;
 	static const int TURN_PIN = 4;
-	static const int MOVE_SPEED = 20;
+	static const int MOVE_SPEED = 40;
     static const int MOVE_TIME = 100;
     
 	Tracks();
@@ -30,6 +30,12 @@ public:
 
 	void setup();
 	void loop();
+
+    // stateless
+    void turnRight();
+    void forward();
+    void backward();
+    void turnLeft();
 
 	void turnToAngle(int angle);
 	void clockwiseTurn(int angle);
@@ -47,10 +53,6 @@ public:
 	inline tracksState state() { return m_state; }
 
 private: 
-	void turnRight();
-	void forward();
-	void backward();
-	void turnLeft();
 
 	Servo left; 
 	Servo right; 

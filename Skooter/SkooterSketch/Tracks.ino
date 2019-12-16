@@ -55,14 +55,14 @@ void Tracks::turnLeft()
 
 void Tracks::forward()
 {
-	left.write(90 - MOVE_SPEED);
-	right.write(90 - MOVE_SPEED); 
+	left.write(90 + MOVE_SPEED);
+	right.write(90 + MOVE_SPEED); 
 }
 
 void Tracks::backward()
 {
-	left.write(90 + MOVE_SPEED);
-	right.write(90 + MOVE_SPEED);
+	left.write(90 - MOVE_SPEED);
+	right.write(90 - MOVE_SPEED);
 }
 
 void Tracks::stop()
