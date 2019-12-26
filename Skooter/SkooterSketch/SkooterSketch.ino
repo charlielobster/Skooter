@@ -1,6 +1,6 @@
-#include "Skooter.h"
+#include "MotorSkooter.h"
 
-Skooter skooter;
+MotorSkooter skooter;
 
 void setup() 
 {
