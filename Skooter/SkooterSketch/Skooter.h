@@ -22,12 +22,12 @@ typedef enum SkooterState
 class Skooter
 {
 public:  
-    static const int DELAY = 20;
+    static const int DELAY = 30;
     static const int SHORT_DELAY = 5;
-    static const double DELTA = .5;
+    static const double DELTA = .75;
     static const double MINIMUM_AVERAGES = 4;
     static const int MOTION_SCAN_RATE = 4;
-    static const int SCAN_INCREMENT = 3;
+    static const int SCAN_INCREMENT = 2;
     static const int MIN_DISTANCE = 150;
     Skooter();
 	void setup();

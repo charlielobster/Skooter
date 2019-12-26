@@ -112,11 +112,11 @@ void Skooter::loop()
             m_state = SkooterState::SCAN_PANNING;
             m_delay = DELAY;
             m_scanPanAngle += (m_scanningLeft ? -SCAN_INCREMENT : SCAN_INCREMENT);
-            if (m_scanPanAngle - SCAN_INCREMENT < 40)
+            if (m_scanPanAngle - SCAN_INCREMENT < 30)
             { 
                 m_scanningLeft = false;
             }
-            if (m_scanPanAngle + SCAN_INCREMENT > 140)
+            if (m_scanPanAngle + SCAN_INCREMENT > 150)
             {
                 m_scanningLeft = true;
             }
