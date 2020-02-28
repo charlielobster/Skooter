@@ -8,8 +8,8 @@
 
 typedef enum RequestState
 {
-	AVAILABLE,
-	PROCESSING_REQUEST
+    AVAILABLE,
+    PROCESSING_REQUEST
 } EspyRequestState;
 
 EspyRequestState requestState = RequestState::AVAILABLE;
@@ -19,16 +19,16 @@ ESP8266WebServer server;
 
 void wifiLogin()
 {
-	int i = 0;
+    int i = 0;
 
-	WiFi.mode(WIFI_STA);
-	WiFi.begin("CCNYPhysicsClub_2.4", "SuperSecurePassword@Physics421");
+    WiFi.mode(WIFI_STA);
+    WiFi.begin("CCNYPhysicsClub_2.4", "SuperSecurePassword@Physics421");
 
-	while (WiFi.status() != WL_CONNECTED && i < 5000)
-	{
-		delay(500);
-		i += 500;
-	}
+    while (WiFi.status() != WL_CONNECTED && i < 5000)
+    {
+        delay(500);
+        i += 500;
+    }
 }
 
 void onRoot()
