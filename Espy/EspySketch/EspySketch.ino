@@ -42,34 +42,34 @@ void checkFileName()
 {
     digitalWrite(LED_BUILTIN, 1);
 
-	String fileName = server.uri();
+    String fileName = server.uri();
     String withoutSlash = fileName.substring(1);
 
     if (localFiles.indexOf(fileName) >= 0) 
     {
-		EspyRequestHandler::streamFile(server, fileName);
+        EspyRequestHandler::streamFile(server, fileName);
     }
     else if (SkooterFiles::asList.indexOf(withoutSlash) >= 0)
     {
         // ask Skooter for the file contents
-		Serial.print(withoutSlash + '~');      
+        Serial.print(withoutSlash + '~');      
 
         // set the file EspySerial will write to
-		EspySerial::setFile(fileName);   
+        EspySerial::setFile(fileName);   
 
         // append the file name to the local files
-		if (localFiles.length() > 0) localFiles.concat(',');
-		localFiles += fileName; 	
+        if (localFiles.length() > 0) localFiles.concat(',');
+	    localFiles += fileName; 	
 
         server.send(200, "text/html", "Your request is being processed");
         
         // enter processing state
-		//requestState = RequestState::PROCESSING_REQUEST;
+        //requestState = RequestState::PROCESSING_REQUEST;
     }
     else 
     {
         server.send(404, "text/plain", 
-			EspyRequestHandler::getFileNotFoundMessage(server));
+        EspyRequestHandler::getFileNotFoundMessage(server));
     }
        
     digitalWrite(LED_BUILTIN, 0);
@@ -81,12 +81,12 @@ void setup()
     digitalWrite(LED_BUILTIN, 1);
 
     Serial.begin(38400);    
-	SPIFFS.begin();
-	SPIFFS.format();
+    SPIFFS.begin();
+    SPIFFS.format();
 
-	wifiLogin();
+    wifiLogin();
 
-	MDNS.begin("esp8266");
+    MDNS.begin("esp8266");
 
     server.on("/", onRoot);
     server.onNotFound(checkFileName);
@@ -97,23 +97,23 @@ void setup()
 
 void handleRequests()
 {
-	switch (requestState)
-	{
-	case RequestState::AVAILABLE:
-		server.handleClient();
-		break;
+    switch (requestState)
+    {
+        case RequestState::AVAILABLE:
+            server.handleClient();
+            break;
 
 	case RequestState::PROCESSING_REQUEST:
-		if (EspySerial::state == SerialState::NO_TRANSACTION) 
-		{
-			EspyRequestHandler::streamFile(server, EspySerial::lastFileName());
-			requestState = RequestState::AVAILABLE;
-		}
-		break;
+	    if (EspySerial::state == SerialState::NO_TRANSACTION) 
+	    {
+	        EspyRequestHandler::streamFile(server, EspySerial::lastFileName());
+	        requestState = RequestState::AVAILABLE;
+	    }
+	    break;
 
 	default:
-		break;
-	}
+	    break;
+    }
 }
 
 void loop()
