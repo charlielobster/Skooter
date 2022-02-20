@@ -3,9 +3,6 @@
 
 #include "Lidar.h" 
 #include "PanTilt.h"
-#include "Tracks.h"
-//#include "Cabinet.h"
-#include "NoiseMaker.h"
 
 typedef enum SkooterState
 {
@@ -22,33 +19,28 @@ typedef enum SkooterState
 class Skooter
 {
 public:  
-    static const int DELAY = 30;
-    static const int SHORT_DELAY = 5;
-    static const double DELTA = .75;
-    static const double MINIMUM_AVERAGES = 4;
-    static const int MOTION_SCAN_RATE = 4;
-    static const int SCAN_INCREMENT = 2;
-    static const int MIN_DISTANCE = 150;
-    Skooter();
-	void setup();
-	void loop(); 
+  static const int DELAY = 30;
+  static const int SHORT_DELAY = 5;
+  static const int MOTION_SCAN_RATE = 4;
+  static const int SCAN_INCREMENT = 2;
+  static const int MIN_DISTANCE = 150;
+  Skooter();
+  void setup();
+  void loop(); 
     
 private: 
-	Lidar lidar;
-	PanTilt panTilt;
-	Tracks tracks;
-//	Cabinet cabinet;
-	NoiseMaker noiseMaker;
-
-    skooterState m_state;
-    int m_delay;
-    int m_scanTiltAngle;
-    int m_scanPanAngle;
-    double m_avgReading; 
-    int m_currentReading;   
-    int m_numReadings;
-    bool m_scanningLeft;
-    bool m_scanningUp;
+  Lidar lidar;
+  PanTilt panTilt;
+  
+  skooterState m_state;
+  int m_delay;
+  int m_scanTiltAngle;
+  int m_scanPanAngle;
+  double m_avgReading; 
+  int m_currentReading;   
+  int m_numReadings;
+  bool m_scanningLeft;
+  bool m_scanningUp;
 };
 
 #endif
