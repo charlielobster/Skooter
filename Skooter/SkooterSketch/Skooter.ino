@@ -1,41 +1,39 @@
 #include "Skooter.h" 
 #include "LidarData.h"
 
-Skooter::Skooter() : m_state(SkooterState::AWAKE), m_scanningLeft(true), m_scanningUp(true) {}
+Skooter::Skooter() : 
+  m_state(SkooterState::AWAKE), 
+  m_scanningLeft(true), 
+  m_scanningUp(true) {}
 
 void Skooter::setup()
 {
-    lidar.setup();
+  lidar.setup();
 }
 
 void Skooter::loop()
 {
+  Serial.println(m_state);
     switch (m_state)
     {
     case SkooterState::AWAKE:
-        if (m_delay == 0) 
-        {
-            m_state = SCAN_TILTING;
-            m_scanningLeft = false;
-            m_scanningUp = true;
-            m_avgReading = 0;
-            m_scanPanAngle = PanTilt::PAN_CENTER;
-            m_scanTiltAngle = PanTilt::LEVEL_TILT;
-            panTilt.tiltWrite(m_scanTiltAngle);
-            m_delay = DELAY;
-            m_state = SkooterState::SCAN_TILTING;                        
-        }
-        break;
-
+      m_state = SCAN_TILTING;
+      m_scanningLeft = false;
+      m_scanningUp = true;
+      m_avgReading = 0;
+      m_scanPanAngle = PanTilt::PAN_CENTER;
+      m_scanTiltAngle = PanTilt::LEVEL_TILT;
+      panTilt.tiltWrite(m_scanTiltAngle);
+      m_delay = DELAY;
+      m_state = SkooterState::SCAN_TILTING;                        
+      break;
+  
     case SkooterState::SCAN_TILTING:
-        if (m_delay == 0) 
-        {
-            m_numReadings = 0;
-            m_avgReading = 0;
-            m_state = SkooterState::SCAN_GETTING_AVERAGE;
-            m_delay = SHORT_DELAY;
-        }
-        break;
+  m_numReadings = 0;
+  m_avgReading = 0;
+  m_state = SkooterState::SCAN_GETTING_AVERAGE;
+  m_delay = SHORT_DELAY;
+break;
 
     case SkooterState::SCAN_GETTING_AVERAGE:
         if (m_delay == 0)
