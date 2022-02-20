@@ -6,18 +6,10 @@ Skooter::Skooter() : m_state(SkooterState::AWAKE), m_scanningLeft(true), m_scann
 void Skooter::setup()
 {
     lidar.setup();
-	panTilt.setup();
-	tracks.setup();
-    cabinet.setup();
-	noiseMaker.setup();
 }
 
 void Skooter::loop()
 {
-    cabinet.loop();
-	noiseMaker.loop();
-	tracks.loop();
-	panTilt.loop();
     switch (m_state)
     {
     case SkooterState::AWAKE:
@@ -103,54 +95,8 @@ void Skooter::loop()
         }
         break;        
 
-    case SkooterState::SCAN_WRITING_TO_FILE:
-        if (cabinet.state() == CabinetState::NO_ACTIVITY) 
-        {
-            LidarData ld(tracks.x(), tracks.y(), tracks.heading(), 
-                panTilt.tiltAngle(), panTilt.panAngle(), m_avgReading);
-            cabinet.writeLine(ld.toString());
-            m_state = SkooterState::SCAN_PANNING;
-            m_delay = DELAY;
-            m_scanPanAngle += (m_scanningLeft ? -SCAN_INCREMENT : SCAN_INCREMENT);
-            if (m_scanPanAngle - SCAN_INCREMENT < 30)
-            { 
-                m_scanningLeft = false;
-            }
-            if (m_scanPanAngle + SCAN_INCREMENT > 150)
-            {
-                m_scanningLeft = true;
-            }
-            if (m_scanPanAngle == PanTilt::PAN_CENTER)
-            {
-                if ((m_scanTiltAngle + SCAN_INCREMENT) < 60)
-                {
-                    m_scanTiltAngle += SCAN_INCREMENT;
-                    panTilt.tiltWrite(m_scanTiltAngle);
-                    m_delay = DELAY;                    
-                    m_state = SkooterState::SCAN_TILTING;
-                }
-                else
-                {
-                    panTilt.panWrite(PanTilt::PAN_CENTER);
-                    panTilt.tiltWrite(PanTilt::LEVEL_TILT);
-                    m_state = SkooterState::AWAKE;
-                    m_delay = DELAY;
-                }
-            }
-            panTilt.panWrite(m_scanPanAngle);
-        }
-        break;
-
     case SkooterState::TAKING_MEASUREMENT:
-        if (cabinet.state() == CabinetState::NO_ACTIVITY) 
-        {
-            LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
-            cabinet.writeLine(ld.toString());
-            //if (j == 2000) { 
-             //   m_state = SkooterState::AWAKE;
-               // Serial.println("done");
-           // }
-        }
+        LidarData ld(tracks.x(), tracks.y(), tracks.heading(), panTilt.tiltAngle(), panTilt.panAngle(), lidar.distance());
         break;
     }
     
