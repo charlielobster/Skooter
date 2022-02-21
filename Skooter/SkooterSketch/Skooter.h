@@ -6,32 +6,34 @@
 
 typedef enum SkooterState
 {
-    AWAKE,
-    SCAN_PANNING,
-    SCAN_TILTING,
-    SCAN_GETTING_AVERAGE,
-    SCAN_TAKING_MEASUREMENT,
-    SCAN_WRITING_TO_FILE,
-    TAKING_MEASUREMENT,
-    DONE
+  AWAKE,
+  SCAN_PANNING,
+  SCAN_TILTING,
+  SCAN_GETTING_AVERAGE,
+  SCAN_TAKING_MEASUREMENT,
+  SCAN_WRITING_TO_FILE,
+  TAKING_MEASUREMENT,
+  DONE
 } skooterState;
 
 class Skooter
 {
 public:  
-  static const int DELAY = 30;
-  static const int SHORT_DELAY = 5;
-  static const int MOTION_SCAN_RATE = 4;
-  static const int SCAN_INCREMENT = 2;
-  static const int MIN_DISTANCE = 150;
+  constexpr static int DELAY = 30;
+  constexpr static int SHORT_DELAY = 5;
+  constexpr static double DELTA = 0.75;
+  constexpr static double MINIMUM_AVERAGES = 4;
+  constexpr static int MOTION_SCAN_RATE = 4;
+  constexpr static int SCAN_INCREMENT = 2;
+  constexpr static int MIN_DISTANCE = 150;
   Skooter();
-  void setup();
-  void loop(); 
+	void setup();
+	void loop(); 
     
 private: 
-  Lidar lidar;
-  PanTilt panTilt;
-  
+	Lidar lidar;
+	PanTilt panTilt;
+
   skooterState m_state;
   int m_delay;
   int m_scanTiltAngle;
