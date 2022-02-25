@@ -28,7 +28,8 @@ class Skooter
 public:  
   constexpr static int SPIRAL_DELAY = 20;
   constexpr static int BEE_LINE_DELAY = 15;
-  constexpr static int MINIMUM_DISTANCE = 10;
+  constexpr static int MINIMUM_DISTANCE = 5;
+  constexpr static int DELTA = 30;
   Skooter();
 	void setup();
 	void loop(); 

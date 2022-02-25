@@ -73,7 +73,7 @@ void Skooter::loop()
    case SkooterState::FIND_THE_FINGER:
     if (m_delay == 0) 
     { 
-      if (distance - m_closest.distance < 30) 
+      if (distance - m_closest.distance < DELTA) 
       { 
            Serial.println("MESMERIZED!");
            m_state = SkooterState::MESMERIZED_SPIRALING_OUT;
@@ -85,7 +85,7 @@ void Skooter::loop()
    case SkooterState::MESMERIZED_SPIRALING_OUT:
     if (m_delay == 0) 
     { 
-      if (distance - m_closest.distance > 30) 
+      if (distance - m_closest.distance > DELTA) 
       {       
       if (m_spiralRadius < 32.0) 
       { 
