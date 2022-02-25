@@ -1,0 +1,28 @@
+Skooter Algorithm Ideas
+
+wake up
+initialize nearest neighbor state
+
+do a spiral out routine (mode = WAKE_UP_SPIRAL_OUT)
+
+each moment that passes during this routine, 
+
+	first things first, check for nearest neighbor 
+		(record theta and phi for all candidates)
+		make a noise whenever you find a new best candidate
+			noise should keep getting louder or more complicated with each new best
+
+once you reach the outer edge of the view, spiral in until you are close to the nearest neighbor, when as close as you can get via spiral, bee-line to the old position. 
+if the finger is still there (new distance is close to last record), make a lot of noise!! this must be the finger!
+
+If so, Skooter is in a new mode, MESMERIZED mode!
+
+while MESMERIZED
+
+	spiral out (mode = MESMERIZED_SPIRALING_OUT) until you see something a lot farther away // ie. current_distance - finger_distance >> const 
+	stop! go back to the finger! (mode = MESMERIZED_SPIRALING_IN) until you get close to the finger
+
+
+
+																											
+	

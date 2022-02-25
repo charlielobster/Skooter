@@ -4,28 +4,31 @@
 #include "Lidar.h" 
 #include "PanTilt.h"
 
+typedef struct LidarPanTilt
+{
+  LidarPanTilt() : distance(9999) {}
+  int distance;
+  int theta; // pan
+  int phi;  // tilt
+} lidarPanTilt;
+
 typedef enum SkooterState
 {
   AWAKE,
-  SCAN_PANNING,
-  SCAN_TILTING,
-  SCAN_GETTING_AVERAGE,
-  SCAN_TAKING_MEASUREMENT,
-  SCAN_WRITING_TO_FILE,
-  TAKING_MEASUREMENT,
-  DONE
+  WAKE_UP_SPIRALING_OUT,
+  WAKE_UP_SPIRALING_IN,
+  FIND_THE_FINGER,
+  MESMERIZED,
+  MESMERIZED_SPIRALING_OUT,
+  MESMERIZED_SPIRALING_IN
 } skooterState;
 
 class Skooter
 {
 public:  
-  constexpr static int DELAY = 30;
-  constexpr static int SHORT_DELAY = 5;
-  constexpr static double DELTA = 0.75;
-  constexpr static double MINIMUM_AVERAGES = 4;
-  constexpr static int MOTION_SCAN_RATE = 4;
-  constexpr static int SCAN_INCREMENT = 2;
-  constexpr static int MIN_DISTANCE = 150;
+  constexpr static int SPIRAL_DELAY = 20;
+  constexpr static int BEE_LINE_DELAY = 15;
+  constexpr static int MINIMUM_DISTANCE = 10;
   Skooter();
 	void setup();
 	void loop(); 
@@ -35,14 +38,10 @@ private:
 	PanTilt panTilt;
 
   skooterState m_state;
+  lidarPanTilt m_closest;
   int m_delay;
-  int m_scanTiltAngle;
-  int m_scanPanAngle;
-  double m_avgReading; 
-  int m_currentReading;   
-  int m_numReadings;
-  bool m_scanningLeft;
-  bool m_scanningUp;
+  double m_spiralRadius;
+  double m_theta;
 };
 
 #endif
