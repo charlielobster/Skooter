@@ -6,14 +6,14 @@
 class PanTilt 
 {
 public: 
-  constexpr static int PAN_PIN = 6;
-  constexpr static int TILT_PIN = 9;
-  constexpr static int MIN_TILT = 28;
-  constexpr static int MAX_TILT = 180;  
-  constexpr static int LEVEL_TILT = 35;
-  constexpr static int HALF_TILT = 71;
-  constexpr static int UP_TILT = 125;
-  constexpr static int PAN_CENTER = 90;
+	constexpr static int PAN_PIN = 6;
+	constexpr static int TILT_PIN = 9;
+	constexpr static int MIN_TILT = 28;
+	constexpr static int MAX_TILT = 180;  
+	constexpr static int LEVEL_TILT = 35;
+	constexpr static int HALF_TILT = 71;
+	constexpr static int UP_TILT = 125;
+	constexpr static int PAN_CENTER = 90;
 
 	PanTilt() : 
 		m_panAngle(PAN_CENTER),

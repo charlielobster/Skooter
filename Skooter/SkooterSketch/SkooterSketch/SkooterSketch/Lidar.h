@@ -6,15 +6,8 @@
 class Lidar 
 {
 public:
-	void setup() 
-	{
-		lidarLite.begin(0, true);
-	}
-	
-	int distance()
-	{
-		return lidarLite.distance();
-	}
+	inline void setup() { lidarLite.begin(0, true); }	
+	inline int distance() { return lidarLite.distance(); }
 	
 private: 
 	LIDARLite lidarLite; 
