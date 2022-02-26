@@ -5,36 +5,50 @@ Skooter::Skooter() : m_state(SkooterState::AWAKE) {}
 
 void Skooter::setup()
 {
-    lidar.setup();
-    panTilt.setup();
-    panTilt.setTheta(PanTilt::PAN_CENTER);
-    panTilt.setPhi(PanTilt::UP_TILT);
-    delay(30);
+    m_pan.attach(PAN_PIN);
+    m_tilt.attach(TILT_PIN);
+    m_pan.write(PAN_CENTER);
+    m_tilt.write(START_TILT);
+    delay(50);
     m_state = SkooterState::SEEKING_NEAREST_NEIGHBOR;
+    m_lidar.begin(0, true);
 }
 
 void Skooter::loop()
 {
     // sprintf to msgBuffer to format logs
-    char msgBuffer[200];
+    static char lineBuffer[80];
     m_current.timestamp = millis();
-    m_current.distance = lidar.distance();
-    m_current.theta = panTilt.theta();
-    m_current.phi = panTilt.phi();
-    sprintf(msgBuffer,
-        "m_current.timestamp: %lu, distance: %d, theta: %d, phi: %d",
-        m_current.timestamp, m_current.distance, m_current.theta, m_current.phi);
-    Serial.println(msgBuffer);
+    m_current.distance = m_lidar.distance();
+    m_current.pan = m_pan.read();
+    m_current.tilt = m_tilt.read();
 
-    sprintf(msgBuffer,
-        "m_last.timestamp: %lu, distance: %d, theta: %d, phi: %d",
-        m_last.timestamp, m_last.distance, m_last.theta, m_last.phi);
-    Serial.println(msgBuffer);
+    // record latest nearest neighbor
+    if (m_current.distance < m_closest.distance)
+    {
+        m_closest = m_current;
+
+        sprintf(lineBuffer,
+            "new closest! timestamp: %lu, distance: %d, pan: %d, tilt: %d",
+            m_closest.timestamp, m_closest.distance, m_closest.tilt , m_closest.tilt);
+        Serial.println(lineBuffer);
+
+        sprintf(lineBuffer,
+            "m_current.timestamp: %lu, distance: %d, pan: %d, tilt: %d",
+            m_current.timestamp, m_current.distance, m_current.pan, m_current.tilt);
+        Serial.println(lineBuffer);
+
+        sprintf(lineBuffer,
+            "m_last.timestamp: %lu, distance: %d, pan: %d, tilt: %d",
+            m_last.timestamp, m_last.distance, m_last.pan, m_last.tilt);
+        Serial.println(lineBuffer);
+    }
 
     int delta = m_last.distance - m_current.distance;
-    sprintf(msgBuffer, "delta: %d %s", delta, 
-        (delta > 0 ? "getting closer!" : "oh no! farther away!"));
-    Serial.println(msgBuffer);
+    sprintf(lineBuffer, "delta: %d, %s", delta,
+        (delta > 0 ? "getting closer!" : "whoops! farther away!"));
+    Serial.println(lineBuffer);
+
     m_last = m_current;
 }
 
@@ -150,19 +164,6 @@ void Skooter::loop()
         break;
     }
     
-    // record latest nearest neighbor
-    if (distance < m_closest.distance) 
-    {    
-        sprintf(msgBuffer, 
-            "new best distance: %d, theta: %d, phi: %d", 
-            distance, panTilt.panAngle(), panTilt.tiltAngle());
-        Serial.println(msgBuffer);
-
-        m_closest.distance = distance;
-        m_closest.theta = panTilt.panAngle();
-        m_closest.phi = panTilt.tiltAngle();    
-    }
-
     // done with loop for this round, decrement delay
     m_panTiltDelay--;
     if (m_panTiltDelay < 0) m_panTiltDelay = 0;

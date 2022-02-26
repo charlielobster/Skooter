@@ -103,10 +103,7 @@
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
   </PropertyGroup>
   <ItemGroup>
-    <ClInclude Include="Lidar.h" />
-    <ClInclude Include="LidarData.h" />
     <ClInclude Include="LIDARLite.h" />
-    <ClInclude Include="PanTilt.h" />
     <ClInclude Include="Skooter.h" />
     <ClInclude Include="__vm\.SkooterSketch.vsarduino.h" />
   </ItemGroup>

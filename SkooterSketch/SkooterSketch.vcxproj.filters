@@ -18,16 +18,7 @@
     <ClInclude Include="__vm\.SkooterSketch.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Lidar.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LidarData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LIDARLite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PanTilt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Skooter.h">
