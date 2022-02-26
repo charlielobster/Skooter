@@ -6,7 +6,8 @@
 
 typedef struct LidarPanTilt
 {
-	LidarPanTilt() : distance(-1) {}
+	LidarPanTilt() : distance(9999) {}
+	unsigned long timestamp;
 	int distance;
 	int theta; // pan
 	int phi;  // tilt
@@ -38,7 +39,11 @@ private:
 	PanTilt panTilt;
 
 	skooterState m_state;
+
 	lidarPanTilt m_closest;
+
+
+
 	int m_panTiltDelay;
 	double m_spiralRadius;
 	double m_theta;
