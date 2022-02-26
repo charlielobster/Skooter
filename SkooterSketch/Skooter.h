@@ -42,7 +42,8 @@ private:
 
 	lidarPanTilt m_closest;
 
-
+	lidarPanTilt m_current;
+	lidarPanTilt m_last;
 
 	int m_panTiltDelay;
 	double m_spiralRadius;

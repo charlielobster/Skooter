@@ -17,13 +17,25 @@ void Skooter::loop()
 {
     // sprintf to msgBuffer to format logs
     char msgBuffer[200];
-
-    int distance = lidar.distance();
+    m_current.timestamp = millis();
+    m_current.distance = lidar.distance();
+    m_current.theta = panTilt.theta();
+    m_current.phi = panTilt.phi();
     sprintf(msgBuffer,
-        "new time: %lu, distance: %d, theta: %d, phi: %d",
-        millis(), distance, panTilt.theta(), panTilt.phi());
+        "m_current.timestamp: %lu, distance: %d, theta: %d, phi: %d",
+        m_current.timestamp, m_current.distance, m_current.theta, m_current.phi);
     Serial.println(msgBuffer);
 
+    sprintf(msgBuffer,
+        "m_last.timestamp: %lu, distance: %d, theta: %d, phi: %d",
+        m_last.timestamp, m_last.distance, m_last.theta, m_last.phi);
+    Serial.println(msgBuffer);
+
+    int delta = m_last.distance - m_current.distance;
+    sprintf(msgBuffer, "delta: %d %s", delta, 
+        (delta > 0 ? "getting closer!" : "oh no! farther away!"));
+    Serial.println(msgBuffer);
+    m_last = m_current;
 }
 
 /*
