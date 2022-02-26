@@ -8,7 +8,7 @@ void Skooter::setup()
     lidar.setup();
     panTilt.setup();
     panTilt.setTheta(PanTilt::PAN_CENTER);
-    panTilt.setPhi(PanTilt::START_TILT);
+    panTilt.setPhi(PanTilt::UP_TILT);
     delay(30);
     m_state = SkooterState::SEEKING_NEAREST_NEIGHBOR;
 }
