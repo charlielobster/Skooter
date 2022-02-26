@@ -22,3 +22,6 @@ VisualStudio/.DS_Store
 /Espy/EspySketch/.vs/slnx.sqlite
 /Espy/EspySketch/.vs
 /Skooter/SkooterSketch/.vs
+/Skooter/SkooterSketch/Debug
+/Skooter/SkooterSketch/__vm
+
