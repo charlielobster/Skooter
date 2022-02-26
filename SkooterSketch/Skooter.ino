@@ -7,16 +7,26 @@ void Skooter::setup()
 {
     lidar.setup();
     panTilt.setup();
+    panTilt.setTheta(PanTilt::PAN_CENTER);
+    panTilt.setPhi(PanTilt::START_TILT);
+    delay(30);
+    m_state = SkooterState::SEEKING_NEAREST_NEIGHBOR;
 }
 
 void Skooter::loop()
 {
     // sprintf to msgBuffer to format logs
     char msgBuffer[200];
-  
-    int distance = lidar.distance();
 
-    /*
+    int distance = lidar.distance();
+    sprintf(msgBuffer,
+        "new time: %lu, distance: %d, theta: %d, phi: %d",
+        millis(), distance, panTilt.theta(), panTilt.phi());
+    Serial.println(msgBuffer);
+
+}
+
+/*
     constexpr static double ct = PanTilt::LEVEL_TILT + 48.0;
     constexpr static double cp = PanTilt::PAN_CENTER;
 
@@ -127,7 +137,7 @@ void Skooter::loop()
     default:
         break;
     }
-    */
+    
     // record latest nearest neighbor
     if (distance < m_closest.distance) 
     {    
@@ -144,4 +154,4 @@ void Skooter::loop()
     // done with loop for this round, decrement delay
     m_panTiltDelay--;
     if (m_panTiltDelay < 0) m_panTiltDelay = 0;
-}  
+*/

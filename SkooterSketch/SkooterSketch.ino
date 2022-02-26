@@ -5,10 +5,10 @@ Skooter skooter;
 void setup() 
 {
 	Serial.begin(38400);
-	//skooter.setup();
+	skooter.setup();
 }
 
 void loop() 
 {
-	//skooter.loop();
+	skooter.loop();
 }

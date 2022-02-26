@@ -3,33 +3,33 @@
 
 #include <Servo.h> 
 
-class PanTilt 
+class PanTilt
 {
-public: 
+public:
 	constexpr static int PAN_PIN = 6;
 	constexpr static int TILT_PIN = 9;
-	constexpr static int MIN_TILT = 28;
-	constexpr static int MAX_TILT = 180;  
+	constexpr static int MIN_TILT = 30;
 	constexpr static int LEVEL_TILT = 35;
-	constexpr static int HALF_TILT = 71;
+	constexpr static int START_TILT = 60;
 	constexpr static int UP_TILT = 125;
+	constexpr static int MAX_TILT = 180;
 	constexpr static int PAN_CENTER = 90;
 
-	PanTilt() : 
-		m_panAngle(PAN_CENTER),
-		m_tiltAngle(LEVEL_TILT) {}
+	PanTilt() {}
 
-	void setup();
-	void panWrite(int angle);
-	void tiltWrite(int angle);
-	inline int panAngle() { return m_panAngle; }
-	inline int tiltAngle() { return m_tiltAngle; }
+	inline void setup()
+	{
+		m_pan.attach(PAN_PIN);
+		m_tilt.attach(TILT_PIN);
+	}
+	inline void setTheta(int angle) { m_pan.write(angle); }
+	inline void setPhi(int angle) { m_tilt.write(angle); }
+	inline int theta() { return m_pan.read(); }
+	inline int phi() { return m_tilt.read(); }
 
 private: 
 	Servo m_pan; 
 	Servo m_tilt; 
-	int m_panAngle; 
-	int m_tiltAngle;
 };
 
 #endif

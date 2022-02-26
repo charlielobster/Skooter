@@ -36,7 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LIDARLite.ino" />
-    <None Include="PanTilt.ino" />
     <None Include="Skooter.ino" />
     <None Include="SkooterSketch.ino" />
   </ItemGroup>
