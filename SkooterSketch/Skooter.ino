@@ -42,11 +42,20 @@ void Skooter::loop()
             "m_last.timestamp: %lu, distance: %d, pan: %d, tilt: %d",
             m_last.timestamp, m_last.distance, m_last.pan, m_last.tilt);
         Serial.println(lineBuffer);
+
+        // Skooter is now mesmerized by the closest object 
+        // 
+        // use the heuristic that since
+        // larger objects near Skooter, such as a hand or face,
+        // tend have distances ~100 away from anything else
+        // 
+        // spiral out while the abs(delta) < 100
+
     }
 
     int delta = m_last.distance - m_current.distance;
     sprintf(lineBuffer, "delta: %d, %s", delta,
-        (delta > 0 ? "getting closer!" : "whoops! farther away!"));
+        (delta > 0 ? "getting closer!" : "whoops, farther away!"));
     Serial.println(lineBuffer);
 
     m_last = m_current;
