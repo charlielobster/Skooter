@@ -1,179 +1,176 @@
 #include <Math.h>
 #include "Skooter.h" 
 
-Skooter::Skooter() : m_state(SkooterState::AWAKE) {}
+Skooter::Skooter() : m_state(AWAKE) {}
 
 void Skooter::setup()
 {
+    m_lidar.begin(0, true);
     m_pan.attach(PAN_PIN);
     m_tilt.attach(TILT_PIN);
-    m_pan.write(PAN_CENTER);
-    m_tilt.write(START_TILT);
-    delay(50);
-    m_state = SkooterState::SEEKING_NEAREST_NEIGHBOR;
-    m_lidar.begin(0, true);
+ //   Serial.begin(38400);
+}
+
+void Skooter::getLidarEvent()
+{
+    m_current.distance = m_lidar.distance();
+//    m_current.distance = (m_current.distance == 1 ? 999 : m_current.distance);
+    m_current.pan = m_pan.read();
+    m_closest = (m_current.distance < m_closest.distance ? m_current : m_closest);
+}
+
+void Skooter::moveToClosest()
+{
+    m_state = MOVING_TO_CLOSEST;
+    m_lastHit = m_closest;
+    m_pan.write(m_closest.pan);
+    delay(LARGE_MOVE_DELAY);
+}
+
+void Skooter::tryPanningRight()
+{
+    if (m_current.pan < MAX_PAN)
+    {
+        m_pan.write(m_current.pan + 1);
+        delay(SMALL_MOVE_DELAY);
+    }
+    else
+    {
+        moveToClosest();
+    }
+}
+
+void Skooter::tryPanningLeft()
+{
+    if (m_current.pan > MIN_PAN)
+    {
+        m_pan.write(m_current.pan - 1);
+        delay(SMALL_MOVE_DELAY);
+    }
+    else
+    {
+        moveToClosest();
+    }
 }
 
 void Skooter::loop()
-{
-    // sprintf to msgBuffer to format logs
-    static char lineBuffer[80];
-    m_current.timestamp = millis();
-    m_current.distance = m_lidar.distance();
-    m_current.pan = m_pan.read();
-    m_current.tilt = m_tilt.read();
+{  
+    getLidarEvent();
 
-    // record latest nearest neighbor
-    if (m_current.distance < m_closest.distance)
-    {
-        m_closest = m_current;
+    //sprintf(m_lineBuffer, "state: %d", m_state);
+    //Serial.println(m_lineBuffer);
 
-        sprintf(lineBuffer,
-            "new closest! timestamp: %lu, distance: %d, pan: %d, tilt: %d",
-            m_closest.timestamp, m_closest.distance, m_closest.tilt , m_closest.tilt);
-        Serial.println(lineBuffer);
+    //sprintf(m_lineBuffer, "current distance: %d, pan: %d", m_current.distance, m_current.pan);
+    //Serial.println(m_lineBuffer);
 
-        sprintf(lineBuffer,
-            "m_current.timestamp: %lu, distance: %d, pan: %d, tilt: %d",
-            m_current.timestamp, m_current.distance, m_current.pan, m_current.tilt);
-        Serial.println(lineBuffer);
-
-        sprintf(lineBuffer,
-            "m_last.timestamp: %lu, distance: %d, pan: %d, tilt: %d",
-            m_last.timestamp, m_last.distance, m_last.pan, m_last.tilt);
-        Serial.println(lineBuffer);
-
-        // Skooter is now mesmerized by the closest object 
-        // 
-        // use the heuristic that since
-        // larger objects near Skooter, such as a hand or face,
-        // tend have distances ~100 away from anything else
-        // 
-        // spiral out while the abs(delta) < 100
-
-    }
-
-    int delta = m_last.distance - m_current.distance;
-    sprintf(lineBuffer, "delta: %d, %s", delta,
-        (delta > 0 ? "getting closer!" : "whoops, farther away!"));
-    Serial.println(lineBuffer);
-
-    m_last = m_current;
-}
-
-/*
-    constexpr static double ct = PanTilt::LEVEL_TILT + 48.0;
-    constexpr static double cp = PanTilt::PAN_CENTER;
+    //sprintf(m_lineBuffer, "last distance: %d, pan: %d", m_lastHit.distance, m_lastHit.pan);
+    //Serial.println(m_lineBuffer);
 
     switch (m_state)
     {
-    case SkooterState::AWAKE:
-        m_panTiltDelay = 0;
-        m_spiralRadius = 2;                     
-        m_theta = 0;
-        m_closest.distance = 999;
-        m_state = SkooterState::SEEKING_SPIRALING_OUT;   
+    case AWAKE:
+        m_pan.write(MIN_PAN);
+        m_tilt.write(START_TILT); 
+        m_closest.distance = MAX_DISTANCE;
+        m_state = FINDING_CLOSEST;
+        delay(LARGE_MOVE_DELAY);
         break;
 
-    case SkooterState::SEEKING_SPIRALING_OUT:
-        if (m_panTiltDelay == 0) 
+    case FINDING_CLOSEST:
+        if (m_current.pan < MAX_PAN - 1)
         {
-            if (m_spiralRadius < 32.0) 
-            { 
-                m_spiralRadius+=0.5;
-                m_theta += M_PI / m_spiralRadius;
-                panTilt.panWrite(cp + m_spiralRadius * cos(m_theta));
-                panTilt.tiltWrite(ct + m_spiralRadius * sin(m_theta));
-                m_panTiltDelay = SPIRAL_DELAY;            
+            m_pan.write(m_current.pan + 1);
+            delay(SMALL_MOVE_DELAY);
+        }
+        else
+        {
+            moveToClosest();
+        }
+        break;
+
+    case MOVING_TO_CLOSEST:
+    case FINDING_LEFT_EDGE:
+    case FINDING_RIGHT_EDGE:
+    case CORRECTING_LEFT:
+    case CORRECTING_RIGHT:
+
+        int delta = abs(m_lastHit.distance - m_current.distance);
+
+        if (delta < MIN_EDGE_DELTA)
+        {
+            switch (m_state)
+            {
+            case MOVING_TO_CLOSEST:
+                // Serial.println("found object!");
+
+            case CORRECTING_LEFT:
+                m_state = FINDING_LEFT_EDGE;
+
+            case FINDING_LEFT_EDGE:
+                tryPanningRight();
+                break;
+
+            case CORRECTING_RIGHT:
+                m_state = FINDING_RIGHT_EDGE;
+
+            case FINDING_RIGHT_EDGE:
+                tryPanningLeft();
+                break;
+            }
+            m_lastHit = m_current;
+        }
+        else
+        {
+            switch (m_state)
+            {
+            case MOVING_TO_CLOSEST:
+                //  Serial.println("object not found!");
+                m_closest.distance = MAX_DISTANCE;
+                m_state = FINDING_CLOSEST;
+                m_pan.write(MIN_PAN);
+                delay(LARGE_MOVE_DELAY);
+                break;
+
+            case FINDING_LEFT_EDGE:
+                //   Serial.println("setting left edge");
+                m_state = CORRECTING_RIGHT;
+                m_leftEdge = m_current = m_lastHit;
+
+            case CORRECTING_RIGHT:
+                tryPanningLeft();
+                break;
+
+            case FINDING_RIGHT_EDGE:
+                //  Serial.println("setting right edge");
+                m_state = CORRECTING_LEFT;
+                m_rightEdge = m_current = m_lastHit;
+
+            case CORRECTING_LEFT:
+                tryPanningRight();
+                break;
+            }
+
+            m_closest.pan = (m_rightEdge.pan + m_leftEdge.pan) / 2;
+
+            //sprintf(m_lineBuffer, "left edge distance: %d, pan: %d", m_leftEdge.distance, m_leftEdge.pan);
+            //Serial.println(m_lineBuffer);
+
+            //sprintf(m_lineBuffer, "right edge distance: %d, pan: %d", m_rightEdge.distance, m_rightEdge.pan);
+            //Serial.println(m_lineBuffer);
+
+            //sprintf(m_lineBuffer, "delta: %d", m_state, delta);
+            //Serial.println(m_lineBuffer);
+
+            if (m_lastHit.distance < m_current.distance)
+            {
+                m_current = m_lastHit;
+                //   Serial.println("setting current to last");
             }
             else
             {
-                m_state = SkooterState::SEEKING_NEAREST_NEIGHBOR;
-                panTilt.panWrite(m_closest.theta);
-                panTilt.tiltWrite(m_closest.phi);
-                m_panTiltDelay = BEE_LINE_DELAY;
+                //   Serial.println("keeping previous current");
             }
         }
-        break;
-
-    case SkooterState::SEEKING_SPIRALING_IN:   
-        if (m_panTiltDelay == 0) 
-        {  
-            if (m_spiralRadius > 4.0) 
-            { 
-                m_spiralRadius-=0.5;
-                m_theta -= M_PI / m_spiralRadius;
-                panTilt.panWrite(cp + m_spiralRadius * cos(m_theta));
-                panTilt.tiltWrite(ct + m_spiralRadius * sin(m_theta));
-                m_panTiltDelay = SPIRAL_DELAY;      
-            }
-            else 
-            {
-                m_spiralRadius = 2;
-                m_state = SkooterState::SEEKING_NEAREST_NEIGHBOR;
-                panTilt.panWrite(m_closest.theta);
-                panTilt.tiltWrite(m_closest.phi);
-                m_panTiltDelay = BEE_LINE_DELAY;
-            }
-        }
-        break;
-
-    case SkooterState::SEEKING_NEAREST_NEIGHBOR:
-        if (m_panTiltDelay == 0) 
-        { 
-            if ((distance - m_closest.distance) < DELTA) 
-            { 
-                Serial.println("MESMERIZED!");
-                m_state = SkooterState::MESMERIZED_SPIRALING_OUT;
-                m_panTiltDelay = 0;
-            } 
-            else 
-            {
-            Serial.println("No finger found!");  
-            m_state = SkooterState::SEEKING_SPIRALING_OUT;
-            m_panTiltDelay = 0;
-            //m_spiralRadius = 2;
-            m_theta = 0;
-            }
-        }
-        break;
-
-    case SkooterState::MESMERIZED_SPIRALING_OUT:
-        if (m_panTiltDelay == 0) 
-        { 
-            if (distance - m_closest.distance < DELTA) 
-            {       
-            if (m_spiralRadius < 32.0) 
-            { 
-                m_spiralRadius+=0.5;
-                m_theta += M_PI / m_spiralRadius;
-                panTilt.panWrite(m_closest.theta + m_spiralRadius * cos(m_theta));
-                panTilt.tiltWrite(m_closest.phi + m_spiralRadius * sin(m_theta));
-            }
-            else
-            {
-                m_state = SkooterState::MESMERIZED_SPIRALING_IN;
-                panTilt.panWrite(m_closest.theta);
-                panTilt.tiltWrite(m_closest.phi);
-            }
-            m_panTiltDelay = SPIRAL_DELAY;
-            }
-            else 
-            {
-                Serial.println("Oh no! We lost the finger!");
-                m_state = SkooterState::SEEKING_NEAREST_NEIGHBOR;
-                panTilt.panWrite(m_closest.theta);
-                panTilt.tiltWrite(m_closest.phi);
-                m_panTiltDelay = BEE_LINE_DELAY;
-            }
-        }
-        break;
-    
-    default:
         break;
     }
-    
-    // done with loop for this round, decrement delay
-    m_panTiltDelay--;
-    if (m_panTiltDelay < 0) m_panTiltDelay = 0;
-*/
+}
