@@ -16,8 +16,8 @@ constexpr static int MIN_PAN = 20; // 10;
 constexpr static int PAN_CENTER = 90;
 constexpr static int MAX_PAN = 160; // 170;
 constexpr static int WAKE_DELAY = 100000;
-constexpr static int MIN_EDGE_DELTA = 40;
-constexpr static int SMALL_MOVE_DELAY = 25;
+constexpr static int MIN_EDGE_DELTA = 48;
+constexpr static int SMALL_MOVE_DELAY = 24;
 constexpr static int LARGE_MOVE_DELAY = 1500;
 
 typedef struct LidarEvent
@@ -31,7 +31,6 @@ typedef struct LidarEvent
 typedef enum SkooterState
 {
 	AWAKE,
-	STOP_MOVING,
 	FINDING_CLOSEST,
 	MOVING_TO_CLOSEST,
 	FINDING_LEFT_EDGE,

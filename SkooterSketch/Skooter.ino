@@ -14,7 +14,6 @@ void Skooter::setup()
 void Skooter::getLidarEvent()
 {
     m_current.distance = m_lidar.distance();
-//    m_current.distance = (m_current.distance == 1 ? 999 : m_current.distance);
     m_current.pan = m_pan.read();
     m_closest = (m_current.distance < m_closest.distance ? m_current : m_closest);
 }
@@ -88,6 +87,7 @@ void Skooter::loop()
         }
         break;
 
+    // awkward ... but there it is
     case MOVING_TO_CLOSEST:
     case FINDING_LEFT_EDGE:
     case FINDING_RIGHT_EDGE:
@@ -96,6 +96,8 @@ void Skooter::loop()
 
         int delta = abs(m_lastHit.distance - m_current.distance);
 
+        // if delta < MIN_EDGE_DELTA, 
+        // there is an object implied by closest, last, and current
         if (delta < MIN_EDGE_DELTA)
         {
             switch (m_state)
@@ -120,6 +122,7 @@ void Skooter::loop()
             m_lastHit = m_current;
         }
         else
+        // delta >= MIN_EDGE_DELTA, a new object
         {
             switch (m_state)
             {
@@ -132,18 +135,43 @@ void Skooter::loop()
                 break;
 
             case FINDING_LEFT_EDGE:
-                //   Serial.println("setting left edge");
-                m_state = CORRECTING_RIGHT;
-                m_leftEdge = m_current = m_lastHit;
+                // if the current distance is closer than the last hit, 
+                // then this object must be the new closest object
+                if (m_current.distance == m_closest.distance) 
+                {
+                    // m_current must be the m_closest
+                    m_closest = m_rightEdge = m_current;
+                    tryPanningRight();
+                }
+                else 
+                // otherwise, the last hit must be the left edge of the closest object
+                {
+                    //   Serial.println("setting left edge");
+                    m_state = CORRECTING_RIGHT;
+                    m_leftEdge = m_current = m_lastHit; // reset everything to the last hit
+                    tryPanningLeft();
+                }
+                break;
 
             case CORRECTING_RIGHT:
                 tryPanningLeft();
                 break;
 
             case FINDING_RIGHT_EDGE:
-                //  Serial.println("setting right edge");
-                m_state = CORRECTING_LEFT;
-                m_rightEdge = m_current = m_lastHit;
+                if (m_current.distance < m_lastHit.distance)
+                {
+                    // m_current must be the m_closest
+                    m_closest = m_leftEdge = m_current;
+                    tryPanningLeft();
+                }
+                else
+                {
+                    //  Serial.println("setting right edge");
+                    m_state = CORRECTING_LEFT;
+                    m_rightEdge = m_current = m_lastHit;
+                    tryPanningRight();
+                }
+                break;
 
             case CORRECTING_LEFT:
                 tryPanningRight();
@@ -160,16 +188,6 @@ void Skooter::loop()
 
             //sprintf(m_lineBuffer, "delta: %d", m_state, delta);
             //Serial.println(m_lineBuffer);
-
-            if (m_lastHit.distance < m_current.distance)
-            {
-                m_current = m_lastHit;
-                //   Serial.println("setting current to last");
-            }
-            else
-            {
-                //   Serial.println("keeping previous current");
-            }
         }
         break;
     }
