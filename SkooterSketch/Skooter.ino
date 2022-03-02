@@ -8,7 +8,7 @@ void Skooter::setup()
     m_lidar.begin(0, true);
     m_pan.attach(PAN_PIN);
     m_tilt.attach(TILT_PIN);
- //   Serial.begin(38400);
+    Serial.begin(38400);
 }
 
 void Skooter::getLidarEvent()
@@ -136,10 +136,11 @@ void Skooter::loop()
 
             case FINDING_LEFT_EDGE:
                 // if the current distance is closer than the last hit, 
-                // then current object must be the new closest object
-                if (m_current.distance == m_closest.distance) 
+                // then this object must be the new closest object
+                if (m_current.distance < m_lastHit.distance)
                 {
                     // m_current must be the m_closest
+                    Serial.println(m_current.pan == m_closest.pan ? "current is closest" : "current is not closest");
                     m_closest = m_rightEdge = m_current;
                     tryPanningRight();
                 }
@@ -160,7 +161,8 @@ void Skooter::loop()
             case FINDING_RIGHT_EDGE:
                 if (m_current.distance < m_lastHit.distance)
                 {
-                    // m_current must be the m_closest
+                    // current is likely to be the closest, but may not be in cases with sloping walls
+                    Serial.println(m_current.pan == m_closest.pan ? "current is closest" : "current is not closest");
                     m_closest = m_leftEdge = m_current;
                     tryPanningLeft();
                 }
