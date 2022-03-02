@@ -8,12 +8,12 @@ constexpr static int MIN_TILT = 30;
 constexpr static int LEVEL_TILT = 35;
 constexpr static int START_TILT = 55;
 constexpr static int UP_TILT = 125;
-constexpr static int MAX_TILT = 180;
+constexpr static int MAX_TILT = 150;
 constexpr static int MIN_PAN = 30;
 constexpr static int PAN_CENTER = 90;
 constexpr static int MAX_PAN = 150; 
 constexpr static int MIN_DELTA = 50;
-constexpr static int SMALL_MOVE_DELAY = 20;
+constexpr static int SMALL_MOVE_DELAY = 25;
 constexpr static int LARGE_MOVE_DELAY = 1000;
 
 typedef struct LidarEvent
@@ -21,17 +21,17 @@ typedef struct LidarEvent
     LidarEvent() : distance(MAX_DISTANCE), pan(0) {}
     int distance;
     int pan;
+    int tilt;
 } lidarEvent;
 
 LIDARLite lidar;
 Servo pan;
 Servo tilt;
 
-lidarEvent current;	    // current reading
-lidarEvent last;		// last reading 
-lidarEvent leftEdge;	// right edge pan angle < left edge pan angle, 
-lidarEvent rightEdge;	// since the angles are from Skooter's point of view
-
+lidarEvent current; // current reading
+lidarEvent last;	// last reading 
+lidarEvent minEdge;	// right edge pan angle < left edge pan angle, 
+lidarEvent maxEdge;	// since the angles are from Skooter's point of view
 
 void setup()
 {
@@ -39,9 +39,23 @@ void setup()
     pan.attach(PAN_PIN);
     tilt.attach(TILT_PIN);
     current.pan = MIN_PAN - 1;
+    current.tilt = MIN_TILT - 1;
     pan.write(MIN_PAN);
     tilt.write(START_TILT);
     delay(LARGE_MOVE_DELAY);
+}
+
+void tryTiltingUp()
+{
+    if (current.tilt < MAX_TILT)
+    {
+        tilt.write(current.tilt + 1);
+    }
+    else
+    {
+        maxEdge.tilt = current.tilt;
+        tilt.write(current.tilt - 1);
+    }
 }
 
 void tryPanningRight()
@@ -52,8 +66,21 @@ void tryPanningRight()
     }
     else
     {
-        rightEdge.pan = current.pan;
+        maxEdge.pan = current.pan;
         pan.write(current.pan - 1);
+    }
+}
+
+void tryTiltingDown()
+{
+    if (current.tilt > MIN_TILT)
+    {
+        tilt.write(current.tilt - 1);
+    }
+    else
+    {
+        minEdge.tilt = current.tilt;
+        tilt.write(current.tilt + 1);
     }
 }
 
@@ -65,7 +92,7 @@ void tryPanningLeft()
     }
     else
     {
-        leftEdge.pan = current.pan;
+        minEdge.pan = current.pan;
         pan.write(current.pan + 1);
     }
 }
@@ -76,6 +103,7 @@ void loop()
 
     current.distance = lidar.distance();
     current.pan = pan.read();
+    current.tilt = tilt.read();
 
     int delta = abs(last.distance - current.distance);
     bool movingRight = (current.pan - last.pan > 0 ? true : false);
@@ -88,12 +116,12 @@ void loop()
         {
             if (currentIsCloser)
             {
-                leftEdge = current;
+                minEdge.pan = current.pan;
                 tryPanningRight();
             }
             else
             {
-                rightEdge = last;
+                maxEdge.pan = last.pan;
                 tryPanningLeft();
             }
         }
@@ -104,12 +132,12 @@ void loop()
         {
             if (currentIsCloser)
             {
-                rightEdge = current;
+                maxEdge.pan = current.pan;
                 tryPanningLeft();
             }
             else
             {
-                leftEdge = last;
+                minEdge.pan = last.pan;
                 tryPanningRight();
             }
         }
