@@ -21,13 +21,9 @@
     <ClInclude Include="LIDARLite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Skooter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="LIDARLite.ino" />
-    <None Include="Skooter.ino" />
     <None Include="SkooterSketch.ino" />
   </ItemGroup>
 </Project>

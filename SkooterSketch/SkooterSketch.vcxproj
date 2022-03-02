@@ -107,12 +107,10 @@
   </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="LIDARLite.h" />
-    <ClInclude Include="Skooter.h" />
     <ClInclude Include="__vm\.SkooterSketch.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LIDARLite.ino" />
-    <None Include="Skooter.ino" />
     <None Include="SkooterSketch.ino" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
