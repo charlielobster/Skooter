@@ -17,7 +17,7 @@ constexpr static int PAN_CENTER = 90;
 constexpr static int MAX_PAN = 160; // 170;
 constexpr static int WAKE_DELAY = 100000;
 constexpr static int MIN_EDGE_DELTA = 48;
-constexpr static int SMALL_MOVE_DELAY = 24;
+constexpr static int SMALL_MOVE_DELAY = 30;
 constexpr static int LARGE_MOVE_DELAY = 1500;
 
 typedef struct LidarEvent

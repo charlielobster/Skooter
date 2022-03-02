@@ -136,7 +136,7 @@ void Skooter::loop()
 
             case FINDING_LEFT_EDGE:
                 // if the current distance is closer than the last hit, 
-                // then this object must be the new closest object
+                // then current object must be the new closest object
                 if (m_current.distance == m_closest.distance) 
                 {
                     // m_current must be the m_closest
