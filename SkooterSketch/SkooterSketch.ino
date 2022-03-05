@@ -45,19 +45,6 @@ void setup()
     delay(LARGE_MOVE_DELAY);
 }
 
-void tryTiltingUp()
-{
-    if (current.tilt < MAX_TILT)
-    {
-        tilt.write(current.tilt + 1);
-    }
-    else
-    {
-        maxEdge.tilt = current.tilt;
-        tilt.write(current.tilt - 1);
-    }
-}
-
 void tryPanningRight()
 {
     if (current.pan < MAX_PAN)
@@ -68,19 +55,6 @@ void tryPanningRight()
     {
         maxEdge.pan = current.pan;
         pan.write(current.pan - 1);
-    }
-}
-
-void tryTiltingDown()
-{
-    if (current.tilt > MIN_TILT)
-    {
-        tilt.write(current.tilt - 1);
-    }
-    else
-    {
-        minEdge.tilt = current.tilt;
-        tilt.write(current.tilt + 1);
     }
 }
 
