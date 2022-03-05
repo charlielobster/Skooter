@@ -4,15 +4,15 @@
 constexpr static int MAX_DISTANCE = 32767;
 constexpr static int PAN_PIN = 6;
 constexpr static int TILT_PIN = 9;
-constexpr static int MIN_TILT = 30;
+constexpr static int MIN_TILT = 60;
 constexpr static int LEVEL_TILT = 35;
 constexpr static int START_TILT = 55;
 constexpr static int UP_TILT = 125;
-constexpr static int MAX_TILT = 150;
+constexpr static int MAX_TILT = 70;
 constexpr static int MIN_PAN = 30;
 constexpr static int PAN_CENTER = 90;
 constexpr static int MAX_PAN = 150; 
-constexpr static int MIN_DELTA = 50;
+constexpr static int MIN_DELTA = 25;
 constexpr static int SMALL_MOVE_DELAY = 25;
 constexpr static int LARGE_MOVE_DELAY = 1000;
 
@@ -28,6 +28,7 @@ LIDARLite lidar;
 Servo pan;
 Servo tilt;
 
+bool tiltingUp;
 lidarEvent current; // current reading
 lidarEvent last;	// last reading 
 lidarEvent minEdge;	// right edge pan angle < left edge pan angle, 
@@ -35,13 +36,15 @@ lidarEvent maxEdge;	// since the angles are from Skooter's point of view
 
 void setup()
 {
+//    Serial.begin(38400);
+    tiltingUp = true;
     lidar.begin(0, true);
     pan.attach(PAN_PIN);
     tilt.attach(TILT_PIN);
     current.pan = MIN_PAN - 1;
     current.tilt = MIN_TILT - 1;
     pan.write(MIN_PAN);
-    tilt.write(START_TILT);
+    tilt.write(MIN_TILT);
     delay(LARGE_MOVE_DELAY);
 }
 
@@ -53,6 +56,7 @@ void tryTiltingUp()
     }
     else
     {
+        tiltingUp = false;
         maxEdge.tilt = current.tilt;
         tilt.write(current.tilt - 1);
     }
@@ -79,6 +83,7 @@ void tryTiltingDown()
     }
     else
     {
+        tiltingUp = true;
         minEdge.tilt = current.tilt;
         tilt.write(current.tilt + 1);
     }
@@ -114,6 +119,8 @@ void loop()
     {
         if (hitObject) tryPanningRight(); else
         {
+            if (tiltingUp) tryTiltingUp(); else tryTiltingDown();
+
             if (currentIsCloser)
             {
                 minEdge.pan = current.pan;
@@ -130,6 +137,8 @@ void loop()
     {
         if (hitObject) tryPanningLeft(); else
         {
+            if (tiltingUp) tryTiltingUp(); else tryTiltingDown();
+
             if (currentIsCloser)
             {
                 maxEdge.pan = current.pan;
@@ -141,6 +150,10 @@ void loop()
                 tryPanningRight();
             }
         }
+    }
+    if (minEdge.pan == MIN_PAN && maxEdge.pan == MAX_PAN)
+    {
+        if (tiltingUp) tryTiltingDown(); else tryTiltingUp();
     }
     delay(SMALL_MOVE_DELAY);
 }
